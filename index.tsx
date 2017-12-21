@@ -1,63 +1,21 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import App from './App';
+import * as _ from 'lodash';
+
+import App from './component/App';
+import { BOARD_SIZE } from './constant';
+import { Piece, Placement, Board } from './game/board';
 import registerServiceWorker from './registerServiceWorker';
-import { transaction } from 'mobx';
-import GameField, { randDirection } from './state/gamelogic';
-import { Cheese, Monster, GameBoard, BOARD_SIZE } from './state/gameboard';
-import './index.css';
 
-class Runner {
-  randPlace(gf: GameField): void {
-    const rPlace = {
-      x: Math.floor(25 * Math.random()),
-      y: Math.floor(25 * Math.random())
-    };
+const placements: Placement[] = [
+  { piece: new Piece('seven'), coordinate: { x: 1, y: 1 } },
+  { piece: new Piece('hundd'), coordinate: { x: 2, y: 2 } }
+];
 
-    gf.place(rPlace, randDirection());
-  }
+const board = new Board(placements);
 
-  moveAll(gf: GameField): void {
-    for (let x = 0; x < BOARD_SIZE; x++) {
-      for (let y = 0; y < BOARD_SIZE; y++) {
-        gf.move({ x, y });
-      }
-    }
-  }
-
-  flipAllIfTooHigh(gf: GameField): void {
-    for (let x = 0; x < BOARD_SIZE; x++) {
-      for (let y = 0; y < BOARD_SIZE; y++) {
-        if (gf.value[x][y] > 9) {
-          gf.flip({ x, y });
-        }
-      }
-    }
-  }
-}
-
-const gameField = new GameField();
-const runner = new Runner();
-
-ReactDOM.render(<App gameField={gameField} />, document.getElementById(
-  'root'
-) as HTMLElement);
+ReactDOM.render(
+  <App size={BOARD_SIZE} board={board} />,
+  document.getElementById('root') as HTMLElement
+);
 registerServiceWorker();
-
-let FRAME = 0;
-const cheese = new Cheese({ x: 1, y: 1 });
-const monster = new Monster({ x: 1, y: 2 });
-const gameboard = new GameBoard([monster], [cheese]);
-
-console.log(gameboard);
-
-(function loop() {
-  // transaction(() => {
-  //   runner.randPlace(gameField);
-  //   runner.moveAll(gameField);
-  //   runner.flipAllIfTooHigh(gameField);
-  // });
-
-  FRAME++;
-  requestAnimationFrame(loop);
-})();
