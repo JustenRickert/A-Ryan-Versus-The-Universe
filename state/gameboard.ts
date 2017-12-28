@@ -15,10 +15,11 @@ interface ICoordinate {
   y: number;
 }
 
-/* Direction->Coordinate relationship. Uses web browser tradition of `x` moves
+/**
+ * Direction->Coordinate relationship. Uses web browser tradition of `x` moves
  * in rightward horizontal direction and `y` moves in downward vertical
- * direction. Also `-x` moves leftward horizontal, and `-y` moves upward
- * vertical. */
+ * direction. (`-x` moves leftward horizontal, and `-y` moves upward vertical.)
+ */
 function deltaCoordOf(d: Direction): ICoordinate {
   switch (d) {
     case Direction.Up:

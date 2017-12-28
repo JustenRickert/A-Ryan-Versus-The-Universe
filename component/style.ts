@@ -12,6 +12,12 @@ export const SquareStyle = {
   display: 'flex'
 };
 
+export const RedSquareStyle = {
+  border: '1px solid black',
+  display: 'flex',
+  backgroundColor: 'red'
+};
+
 export const IconStyle = {
   margin: 'auto'
 };
