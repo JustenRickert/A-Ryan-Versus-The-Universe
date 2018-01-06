@@ -23,12 +23,12 @@ interface Props {
 
 type None = undefined;
 
-interface P {
+interface PieceProps {
   index: number;
   piece: Piece | None;
 }
 
-const PieceView: React.SFC<P> = props => {
+const PieceView: React.SFC<PieceProps> = props => {
   return (
     <div
       className="board-piece"
