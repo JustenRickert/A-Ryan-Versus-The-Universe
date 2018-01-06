@@ -16,6 +16,8 @@ const toNumber = Coordinate.toNumber;
 const pieces: Piece[] = [new MShape({ x: 0, y: 0 })];
 const board = new Board(pieces);
 
+console.log('starting');
+
 setInterval(() => {
   for (const p of pieces) {
     const space = _.sample(p.moves(board));
