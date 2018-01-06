@@ -6,8 +6,25 @@ const sum = (a: Coordinate, b: Coordinate) => Coordinate.plus(a, b);
 type None = undefined;
 
 export default abstract class Piece {
+  /**
+   * What it looks like on the page.
+   */
   symbol: string;
+
+  /**
+   * A tuple { x: number, y: number } corresponding to the position of the
+   * piece.
+   */
   c: Coordinate;
+
+  /**
+   * Time it takes to rest between moves.
+   */
+  abstract timeout: number;
+
+  /**
+   * Collection of possible moves for the piece to make.
+   */
   abstract moves: (b: Board) => Coordinate[];
 
   constructor(symbol: string) {
@@ -21,6 +38,7 @@ export default abstract class Piece {
 
 export class MShape extends Piece {
   c: Coordinate;
+  timeout = 3;
 
   constructor(coordinate: Coordinate) {
     super('m');
@@ -36,7 +54,28 @@ export class MShape extends Piece {
     ]
       .map(c => sum(this.c, c))
       .filter(c => !b.at(c) && b.inbounds(c));
-    // if (!coords.length) return [this.c];
+    return coords;
+  };
+}
+
+export class PShape extends Piece {
+  c: Coordinate;
+  timeout = 4;
+
+  constructor(coordinate: Coordinate) {
+    super('p');
+    this.c = coordinate;
+  }
+
+  moves = (b: Board): Coordinate[] => {
+    const coords = [
+      { x: 1, y: 1 }, // Right-Down
+      { x: -1, y: -1 }, // Left-Up
+      { x: -1, y: 1 }, // Left-Down
+      { x: 1, y: -1 } // Right-Up
+    ]
+      .map(c => sum(this.c, c))
+      .filter(c => !b.at(c) && b.inbounds(c));
     return coords;
   };
 }
