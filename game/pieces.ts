@@ -1,11 +1,14 @@
-import { Coordinate, Board } from './board';
+import { Coordinate } from './coordinate';
+import { Board } from './board';
 
 const sum = (a: Coordinate, b: Coordinate) => Coordinate.plus(a, b);
 
-export default class Piece {
+type None = undefined;
+
+export default abstract class Piece {
   symbol: string;
   c: Coordinate;
-  moves: (b: Board) => Coordinate[];
+  abstract moves: (b: Board) => Coordinate[];
 
   constructor(symbol: string) {
     this.symbol = symbol;
@@ -18,21 +21,22 @@ export default class Piece {
 
 export class MShape extends Piece {
   c: Coordinate;
+
   constructor(coordinate: Coordinate) {
     super('m');
     this.c = coordinate;
   }
+
   moves = (b: Board): Coordinate[] => {
-    const coords: Coordinate[] = [
+    const coords = [
       { x: 1, y: 0 }, // Right
       { x: -1, y: 0 }, // Left
       { x: 0, y: 1 }, // Down
       { x: 0, y: -1 } // Up
     ]
-      .map(c => {
-        return sum(this.c, c);
-      })
-      .filter(c => c !== undefined && b.inbounds(c));
+      .map(c => sum(this.c, c))
+      .filter(c => !b.at(c) && b.inbounds(c));
+    // if (!coords.length) return [this.c];
     return coords;
   };
 }

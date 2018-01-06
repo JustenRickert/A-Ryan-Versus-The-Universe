@@ -2,34 +2,47 @@ import * as React from 'react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { Coordinate, Board } from '../game/board';
+import { boardConf } from '../constant';
+import { Coordinate } from '../game/coordinate';
+import { Board } from '../game/board';
+
 import Piece from '../game/pieces';
-import { BoardStyle, SquareStyle, RedSquareStyle, IconStyle } from './style';
+import {
+  BoardStyle,
+  EmptyStyle,
+  SquareStyle,
+  RedSquareStyle,
+  IconStyle
+} from './style';
 import './App.css';
 
 interface Props {
-  size: [number, number];
+  size: { x: number; y: number };
   board: Board;
 }
 
+type None = undefined;
+
 interface P {
-  value: number;
-  piece: Piece | undefined;
+  index: number;
+  piece: Piece | None;
 }
 
-const PieceView: React.SFC<P> = props => (
-  <div
-    className="board-piece"
-    style={props.value % 2 === 0 ? SquareStyle : RedSquareStyle}
-    key={props.value}
-  >
-    {props.piece ? (
-      <div style={IconStyle}>{props.piece.symbol}</div>
-    ) : (
-      <div style={IconStyle} />
-    )}
-  </div>
-);
+const PieceView: React.SFC<P> = props => {
+  return (
+    <div
+      className="board-piece"
+      style={props.index % 2 === 0 ? SquareStyle : RedSquareStyle}
+      key={props.index}
+    >
+      {props.piece ? (
+        <div style={IconStyle}>{props.piece.symbol}</div>
+      ) : (
+        <div style={EmptyStyle} />
+      )}
+    </div>
+  );
+};
 
 @observer
 class App extends React.Component<Props, {}> {
@@ -40,14 +53,15 @@ class App extends React.Component<Props, {}> {
   private renderBoardLines() {
     const { board, size } = this.props;
 
-    const spaces: Piece[] = new Array(size[0] * size[1]).fill(undefined);
-    const testPiece = Array.from(board.placements.values())[1];
-    board.placements.forEach(p => (spaces[Coordinate.toNumber(p.c)] = p));
+    const places: (Piece | None)[] = new Array(size.x * size.y).fill(undefined);
+    board.placeMap.forEach(p => {
+      if (p instanceof Piece) places[Coordinate.toNumber(p.c)] = p;
+    });
 
     return (
       <div style={BoardStyle}>
-        {spaces.map((piece, i) => (
-          <PieceView key={i} value={i} piece={piece} />
+        {places.map((piece, i) => (
+          <PieceView key={i} index={i} piece={piece} />
         ))}
       </div>
     );

@@ -1,10 +1,10 @@
-import { BOARD_SIZE } from '../constant';
+import { boardConf } from '../constant';
 
 const margin = '55px';
 
 export const BoardStyle = {
   display: 'grid',
-  grid: `auto-flow ${margin} / repeat(${BOARD_SIZE[1]}, ${margin})`
+  grid: `auto-flow ${margin} / repeat(${boardConf.x}, ${margin})`
 };
 
 export const SquareStyle = {
@@ -19,5 +19,12 @@ export const RedSquareStyle = {
 };
 
 export const IconStyle = {
+  margin: 'auto',
+  width: '20px',
+  borderRadius: '10px',
+  border: '1px solid black'
+};
+
+export const EmptyStyle = {
   margin: 'auto'
 };

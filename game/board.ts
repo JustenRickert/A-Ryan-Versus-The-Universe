@@ -1,42 +1,8 @@
 import { observable, computed, toJS } from 'mobx';
 
-import { BOARD_SIZE } from '../constant';
-
+import { boardConf } from '../constant';
+import { Coordinate } from './coordinate';
 import Piece, { MShape } from './pieces';
-
-export class Coordinate {
-  x: number;
-  y: number;
-
-  static equal(c1: Coordinate, c2: Coordinate): boolean {
-    return c1.x === c2.x && c1.y === c2.y;
-  }
-
-  static toString(c: Coordinate): string {
-    return c.x.toString() + ' ' + c.y.toString();
-  }
-
-  static toNumber(c: Coordinate): number {
-    return BOARD_SIZE[1] * c.y + c.x;
-  }
-
-  static diff(c1: Coordinate, c2: Coordinate): Coordinate {
-    const { x, y } = { x: c2.x - c1.x, y: c2.y - c1.y };
-    return new Coordinate({ x, y });
-  }
-
-  static plus(c1: Coordinate, c2: Coordinate): Coordinate {
-    return new Coordinate({
-      x: c2.x + c1.x,
-      y: c2.y + c1.y
-    });
-  }
-
-  constructor({ x, y }: { x: number; y: number } | Coordinate) {
-    this.x = x;
-    this.y = y;
-  }
-}
 
 /**
  * Board
@@ -44,61 +10,74 @@ export class Coordinate {
 
 const toNumber = Coordinate.toNumber;
 const equal = Coordinate.equal;
+type Maybe<T> = T | undefined;
 
 export type Placement = { piece: Piece; c: Coordinate };
 
 export class Board {
-  @observable placements: Map<number, Piece>;
-  placementArray: Piece[];
+  @observable placeMap: Map<number, Maybe<Piece>>;
+  pieces: Piece[];
+
+  private size: { x: number; y: number };
 
   constructor(pieces: Piece[]) {
-    // error check
+    this.size = boardConf;
+
+    /*
+     * Error check.
+     */
     pieces.forEach((p, i) => {
       for (const op of pieces.slice(i + 1, pieces.length)) {
         if (equal(p.c, op.c))
           throw new Error('Cannot make two placements in the same place!');
-        if (p.c.x >= BOARD_SIZE[0] || p.c.y >= BOARD_SIZE[1])
+        if (
+          p.c.x < 0 ||
+          p.c.y < 0 ||
+          p.c.x >= this.size.x ||
+          p.c.y >= this.size.y
+        )
           throw new Error('Cannot place outside of the board!');
       }
     });
 
     /**
-     * Placements are a number (which corresponds to a Coordinate), and a Piece
-     * (corresponding to something like a chess piece on a chess board). They
-     * have to be number because `mobx` doesn't take object for map `key` slot.
+     * `Placements` are a number, and a `Piece` (corresponding to something like
+     * chess pieces places on a chess board). They have to be number because
+     * `mobx` doesn't take object for map `key` slot. Though there is an
+     * isomorphism between the coordinate matrix and the set it maps to with
+     * `toNumber`. i.e. `{x: 0, y:0} -> 0`, `{x:0, y:1} -> board length - 1`,
+     * `...`, `{x: board length -1, y: board height - 1}`.
      */
-    this.placements = new Map<number, Piece>();
+    this.placeMap = new Map<number, Piece>();
     for (const p of pieces) {
-      this.placements.set(toNumber(p.c), p);
+      this.placeMap.set(toNumber(p.c), p);
     }
-    this.placementArray = Array.from(this.placements.values());
+    this.pieces = Array.from(this.placeMap.values()).reduce(
+      (acc, place) => (place !== undefined ? [...acc, place] : acc),
+      new Array<Piece>()
+    );
   }
 
-  at(c: Coordinate): Piece | undefined {
-    return this.placements.get(toNumber(c));
-  }
+  at = (c: Coordinate): Maybe<Piece> => this.placeMap.get(toNumber(c));
 
-  inbounds(c: Coordinate): boolean {
-    return BOARD_SIZE[0] > c.y && c.y >= 0 && BOARD_SIZE[1] > c.x && c.x >= 0;
-  }
+  inbounds = (c: Coordinate): boolean =>
+    c.x >= 0 && c.y >= 0 && this.size.x > c.x && this.size.y > c.y;
 
-  outOfBoundsAt(c: Coordinate): boolean {
-    return !this.inbounds(c);
-  }
+  outbounds = (c: Coordinate): boolean => !this.inbounds(c);
 
   /**
    * Moves piece if it's possible to move the piece.
    */
   move = (piece: Piece, target: Coordinate) => {
-    if (this.outOfBoundsAt(target)) {
+    if (this.outbounds(target)) {
       throw new Error("Can't move there!");
     }
-    this.placements.set(toNumber(target), piece);
 
-    const targetC = this.placements.get(toNumber(target));
-    targetC ? this.placements.delete(toNumber(target)) : undefined;
+    const targetC = this.placeMap.get(toNumber(target));
+    if (targetC) this.placeMap.delete(toNumber(target));
+    this.placeMap.delete(toNumber(piece.c));
 
     piece.c = new Coordinate(target);
-    this.placements.set(toNumber(target), piece);
+    this.placeMap.set(toNumber(target), piece);
   };
 }
