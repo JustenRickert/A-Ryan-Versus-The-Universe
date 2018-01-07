@@ -6,6 +6,8 @@ export enum Team {
   Black = 'black'
 }
 
+class Strategy {}
+
 class Player {
   team: Team;
 
