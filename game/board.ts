@@ -3,6 +3,7 @@ import { observable, computed, toJS } from 'mobx';
 import { boardConf } from '../constant';
 import { Coordinate } from './coordinate';
 import Piece, { MShape } from './pieces';
+import Player, { Team } from './player';
 
 /**
  * Board
@@ -15,19 +16,26 @@ type Maybe<T> = T | undefined;
 export type Placement = { piece: Piece; c: Coordinate };
 
 export class Board {
+  white: Player;
+  black: Player;
+
   @observable placeMap: Map<number, Maybe<Piece>>;
-  pieces: Piece[];
+  get pieces() {
+    return [...this.white.pieces, ...this.black.pieces];
+  }
 
   private size: { x: number; y: number };
 
-  constructor(pieces: Piece[]) {
+  constructor(white: Player, black: Player) {
     this.size = boardConf;
+    this.white = white;
+    this.black = black;
 
     /*
      * Error check.
      */
-    pieces.forEach((p, i) => {
-      for (const op of pieces.slice(i + 1, pieces.length)) {
+    this.pieces.forEach((p, i) => {
+      for (const op of this.pieces.slice(i + 1, this.pieces.length)) {
         if (equal(p.c, op.c))
           throw new Error('Cannot make two placements in the same place!');
         if (
@@ -49,13 +57,9 @@ export class Board {
      * `...`, `{x: board length -1, y: board height - 1}`.
      */
     this.placeMap = new Map<number, Piece>();
-    for (const p of pieces) {
+    for (const p of this.pieces) {
       this.placeMap.set(toNumber(p.c), p);
     }
-    this.pieces = Array.from(this.placeMap.values()).reduce(
-      (acc, place) => (place !== undefined ? [...acc, place] : acc),
-      new Array<Piece>()
-    );
   }
 
   at = (c: Coordinate): Maybe<Piece> => this.placeMap.get(toNumber(c));
@@ -64,6 +68,13 @@ export class Board {
     c.x >= 0 && c.y >= 0 && this.size.x > c.x && this.size.y > c.y;
 
   outbounds = (c: Coordinate): boolean => !this.inbounds(c);
+
+  decrement = () => {
+    this.white.decrement();
+    this.black.decrement();
+  };
+
+  movable = () => [...this.white.movable, ...this.black.movable];
 
   /**
    * Moves piece if it's possible to move the piece.

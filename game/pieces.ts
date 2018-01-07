@@ -23,6 +23,18 @@ export default abstract class Piece {
   abstract timeout: number;
 
   /**
+   * Typically just `this.timeout <= 0`.
+   */
+  abstract canMove: () => boolean;
+
+  /**
+   * `this.canMove` should only handle `this.timeout` based checking.
+   * `this.hasMove` cares more about the possibility that all his `moves` are
+   * taken.
+   */
+  abstract hasMove: () => boolean;
+
+  /**
    * Collection of possible moves for the piece to make.
    */
   abstract moves: (b: Board) => Coordinate[];
