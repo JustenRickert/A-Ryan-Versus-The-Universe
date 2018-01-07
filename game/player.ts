@@ -1,5 +1,8 @@
+import { Coordinate } from './coordinate';
 import { Placement } from './board';
 import Piece from './pieces';
+
+const toNumber = Coordinate.toNumber;
 
 export enum Team {
   White = 'white',
@@ -29,11 +32,17 @@ export default class Player {
   team: Team;
   pieces: Piece[];
   timeController: TimeController;
+  placements: Map<number, Piece>;
 
   constructor(team: Team, pieces: Piece[]) {
     this.team = team;
     this.pieces = pieces;
     this.timeController = new TimeController(pieces);
+    this.placements = new Map();
+
+    for (const p of pieces) {
+      this.placements.set(toNumber(p.c), p);
+    }
   }
 
   run = () => {
