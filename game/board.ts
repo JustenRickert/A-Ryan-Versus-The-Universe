@@ -2,7 +2,7 @@ import { observable, computed, toJS } from 'mobx';
 
 import { boardConf } from '../constant';
 import { Coordinate } from './coordinate';
-import Piece, { MShape } from './pieces';
+import Piece, { MPiece } from './pieces';
 
 /**
  * Board

@@ -19,7 +19,7 @@ export default abstract class Piece {
   }
 }
 
-export class MShape extends Piece {
+export class MPiece extends Piece {
   c: Coordinate;
 
   constructor(coordinate: Coordinate) {

@@ -5,7 +5,7 @@ import { observable } from 'mobx';
 
 import App from './component/App';
 import { boardConf } from './constant';
-import Piece, { MShape } from './game/pieces';
+import Piece, { MPiece } from './game/pieces';
 import { Coordinate } from './game/coordinate';
 import { Placement, Board } from './game/board';
 
@@ -13,7 +13,7 @@ import registerServiceWorker from './registerServiceWorker';
 
 const toNumber = Coordinate.toNumber;
 
-const pieces: Piece[] = [new MShape({ x: 0, y: 0 })];
+const pieces: Piece[] = [new MPiece({ x: 0, y: 0 })];
 const board = new Board(pieces);
 
 setInterval(() => {
