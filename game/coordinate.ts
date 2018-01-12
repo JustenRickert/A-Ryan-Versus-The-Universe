@@ -1,6 +1,6 @@
 import { boardConf } from '../constant';
 
-export class Coordinate {
+export default class Coordinate {
   x: number;
   y: number;
 

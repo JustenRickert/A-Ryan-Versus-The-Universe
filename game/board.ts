@@ -1,7 +1,7 @@
 import { observable, computed, toJS } from 'mobx';
 
 import { boardConf } from '../constant';
-import { Coordinate } from './coordinate';
+import Coordinate from './coordinate';
 import Piece, { MShape } from './pieces';
 
 /**
@@ -15,6 +15,10 @@ type Maybe<T> = T | undefined;
 export type Placement = { piece: Piece; c: Coordinate };
 
 export class Board {
+  /**
+   * Placemap is how the board gets updated. It's an observable with a
+   * React.Component watching it.
+   */
   @observable placeMap: Map<number, Maybe<Piece>>;
   pieces: Piece[];
 

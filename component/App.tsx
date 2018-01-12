@@ -3,7 +3,7 @@ import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 
 import { boardConf } from '../constant';
-import { Coordinate } from '../game/coordinate';
+import Coordinate from '../game/coordinate';
 import { Board } from '../game/board';
 
 import Piece from '../game/pieces';
@@ -38,8 +38,8 @@ const PieceView: React.SFC<P> = props => {
       {props.piece ? (
         <div style={IconStyle}>{props.piece.symbol}</div>
       ) : (
-        <div style={EmptyStyle} />
-      )}
+          <div style={EmptyStyle} />
+        )}
     </div>
   );
 };
@@ -54,7 +54,7 @@ class App extends React.Component<Props, {}> {
     const { board, size } = this.props;
 
     const places: (Piece | None)[] = new Array(size.x * size.y).fill(undefined);
-    board.placeMap.forEach(p => {
+    board.placeMap. (() => {
       if (p instanceof Piece) places[Coordinate.toNumber(p.c)] = p;
     });
 
