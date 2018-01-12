@@ -1,13 +1,9 @@
 import { observable, computed, toJS } from 'mobx';
 
 import { boardConf } from '../constant';
-import { Coordinate } from './coordinate';
-import Piece, { MShape } from './pieces';
+import Coordinate from './coordinate';
+import Piece, { MShape } from './piece';
 import Player, { Team } from './player';
-
-/**
- * Board
- */
 
 const toNumber = Coordinate.toNumber;
 const equal = Coordinate.equal;
@@ -15,7 +11,11 @@ type Maybe<T> = T | undefined;
 
 export type Placement = { piece: Piece; c: Coordinate };
 
-export class Board {
+/**
+ * Board
+ */
+
+export default class Board {
   white: Player;
   black: Player;
 
@@ -69,26 +69,10 @@ export class Board {
 
   outbounds = (c: Coordinate): boolean => !this.inbounds(c);
 
-  decrement = () => {
-    this.white.decrement();
-    this.black.decrement();
+  forward = () => {
+    this.white.time.decrement();
+    this.black.time.decrement();
   };
 
-  movable = () => [...this.white.movable, ...this.black.movable];
-
-  /**
-   * Moves piece if it's possible to move the piece.
-   */
-  move = (piece: Piece, target: Coordinate) => {
-    if (this.outbounds(target)) {
-      throw new Error("Can't move there!");
-    }
-
-    const targetC = this.placeMap.get(toNumber(target));
-    if (targetC) this.placeMap.delete(toNumber(target));
-    this.placeMap.delete(toNumber(piece.c));
-
-    piece.c = new Coordinate(target);
-    this.placeMap.set(toNumber(target), piece);
-  };
+  movablePieces = () => [...this.white.allCanMove, ...this.black.allCanMove];
 }
