@@ -4,9 +4,9 @@ import { observer } from 'mobx-react';
 
 import { boardConf } from '../constant';
 import Coordinate from '../game/coordinate';
-import { Board } from '../game/board';
+import Board from '../game/board';
 
-import Piece from '../game/pieces';
+import Piece from '../game/piece';
 import {
   BoardStyle,
   EmptyStyle,
@@ -23,12 +23,12 @@ interface Props {
 
 type None = undefined;
 
-interface P {
+interface PieceProps {
   index: number;
   piece: Piece | None;
 }
 
-const PieceView: React.SFC<P> = props => {
+const PieceView: React.SFC<PieceProps> = props => {
   return (
     <div
       className="board-piece"

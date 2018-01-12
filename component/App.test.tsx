@@ -1,6 +1,6 @@
-// import * as React from 'react';
-// import * as ReactDOM from 'react-dom';
-// import App from './App';
-// import GameField from './state/gamelogic';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
-// it('renders without crashing', () => {});
+it('renders without crashing', () => {
+  expect(true);
+});
