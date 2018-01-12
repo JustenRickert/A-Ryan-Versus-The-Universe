@@ -3,10 +3,10 @@ import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 
 import { boardConf } from '../constant';
-import { Coordinate } from '../game/coordinate';
-import { Board } from '../game/board';
+import Coordinate from '../game/coordinate';
+import Board from '../game/board';
 
-import Piece from '../game/pieces';
+import Piece from '../game/piece';
 import {
   BoardStyle,
   EmptyStyle,
