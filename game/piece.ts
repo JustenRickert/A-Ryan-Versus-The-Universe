@@ -39,8 +39,12 @@ export default abstract class Piece {
   /**
    * Move piece forward in time. Set the movement grace period of the piece.
    */
-  forward = () => (this.ti -= 1);
-  reset = () => (this.ti = this.cd);
+  forward = () => {
+    this.ti -= 1;
+  };
+  reset = () => {
+    this.ti = this.cd;
+  };
 
   /**
    * Test if the current time is extinguished. This is different from `hasMove`!
