@@ -5,14 +5,16 @@ import { observer } from 'mobx-react';
 import { boardConf } from '../constant';
 import Coordinate from '../game/coordinate';
 import Board from '../game/board';
-
 import Piece from '../game/piece';
+
+import Logger from './Logger';
 import {
   BoardStyle,
   EmptyStyle,
-  SquareStyle,
+  IconStyle,
+  MenuStyle,
   RedSquareStyle,
-  IconStyle
+  SquareStyle
 } from './style';
 import './App.css';
 
@@ -22,6 +24,7 @@ interface Props {
 }
 
 type None = undefined;
+type Maybe<T> = T | None;
 
 interface PieceProps {
   index: number;
@@ -44,6 +47,10 @@ const PieceView: React.SFC<PieceProps> = props => {
   );
 };
 
+const AppView: React.SFC<{}> = props => {
+  return <div style={MenuStyle}>{props.children}</div>;
+};
+
 @observer
 class App extends React.Component<Props, {}> {
   render() {
@@ -53,17 +60,30 @@ class App extends React.Component<Props, {}> {
   private renderBoardLines() {
     const { board, size } = this.props;
 
-    const places: (Piece | None)[] = new Array(size.x * size.y).fill(undefined);
+    const places: Maybe<Piece>[] = new Array(size.x * size.y).fill(undefined);
     board.placeMap.forEach((p, index) => {
       if (p instanceof Piece) places[index] = p;
     });
 
     return (
-      <div style={BoardStyle}>
+      <AppView>
+        <Logger />
+        {this.renderBoard(places)}
+      </AppView>
+    );
+  }
+
+  private renderBoard(places: Maybe<Piece>[]) {
+    return <div style={BoardStyle}>{this.renderPieceViews(places)}</div>;
+  }
+
+  private renderPieceViews(places: Maybe<Piece>[]) {
+    return (
+      <React.Fragment>
         {places.map((piece, i) => (
           <PieceView key={i} index={i} piece={piece} />
         ))}
-      </div>
+      </React.Fragment>
     );
   }
 }
