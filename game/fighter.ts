@@ -14,6 +14,14 @@ abstract class Fighter extends Piece {
 }
 
 class MFighter extends Fighter {
+  team: Team;
+
+  constructor(team: Team, c: Coordinate) {
+    super('M');
+    this.team = team;
+    this.c = c;
+  }
+
   moves = (b: Board): Coordinate[] => {
     const coords = [
       { x: 1, y: 0 }, // Right
