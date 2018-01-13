@@ -38,8 +38,8 @@ const PieceView: React.SFC<PieceProps> = props => {
       {props.piece ? (
         <div style={IconStyle}>{props.piece.symbol}</div>
       ) : (
-        <div style={EmptyStyle} />
-      )}
+          <div style={EmptyStyle} />
+        )}
     </div>
   );
 };
@@ -54,7 +54,7 @@ class App extends React.Component<Props, {}> {
     const { board, size } = this.props;
 
     const places: (Piece | None)[] = new Array(size.x * size.y).fill(undefined);
-    board.placeMap.forEach(p => {
+    board.placeMap. (() => {
       if (p instanceof Piece) places[Coordinate.toNumber(p.c)] = p;
     });
 
