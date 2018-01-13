@@ -12,6 +12,9 @@ type Maybe<T> = T | undefined;
 export type Placement = { piece: Piece; c: Coordinate };
 
 export default class Board {
+  white: Player;
+  black: Player;
+
   /**
    * Placemap is how the board gets updated. It's an observable with a
    * React.Component watching it.
