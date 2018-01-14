@@ -10,7 +10,7 @@ import { ListView, KeyValueView } from './Parts';
 
 import { LoggerStyle, LogCardStyle } from './style';
 
-const CoordinatesAndTimes: React.SFC<{
+const LogCardListView: React.SFC<{
   white: Player;
   black: Player;
 }> = props => {
@@ -49,7 +49,7 @@ export default class Logger extends React.Component<P, {}> {
     return (
       <div style={LoggerStyle}>
         {`Total Time: ${time}`}
-        <CoordinatesAndTimes white={white} black={black} />
+        <LogCardListView white={white} black={black} />
       </div>
     );
   }
