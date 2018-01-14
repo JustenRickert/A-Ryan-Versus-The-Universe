@@ -1,10 +1,10 @@
-import { boardConf } from '../constant';
+import { boardSize } from '../constant';
 
 const margin = '55px';
 
 export const BoardStyle = {
   display: 'grid',
-  grid: `auto-flow ${margin} / repeat(${boardConf.x}, ${margin})`,
+  grid: `auto-flow ${margin} / repeat(${boardSize.x}, ${margin})`,
   flex: '4'
 };
 

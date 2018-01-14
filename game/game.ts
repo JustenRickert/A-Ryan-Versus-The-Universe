@@ -3,15 +3,17 @@ import { observable } from 'mobx';
 import Player, { Team } from './player';
 import { PShape, MShape } from './piece';
 import Board from './board';
+import { boardSize } from '../constant';
 
 export default class GameContext {
-  boardSize = { x: 11, y: 11 };
+  boardSize: { x: number; y: number };
   board: Board;
   @observable time: number;
   @observable black: Player;
   @observable white: Player;
 
   constructor(b: Board, wht: Player, blk: Player) {
+    this.boardSize = boardSize;
     this.board = b;
     this.white = wht;
     this.black = blk;
