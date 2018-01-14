@@ -4,7 +4,8 @@ import { observer } from 'mobx-react';
 
 import { boardConf } from '../constant';
 import Coordinate from '../game/coordinate';
-import Board from '../game/board';
+// import Board from '../game/board';
+import Game from '../game/game';
 import Piece from '../game/piece';
 
 import Logger from './Logger';
@@ -17,11 +18,6 @@ import {
   SquareStyle
 } from './style';
 import './App.css';
-
-interface Props {
-  size: { x: number; y: number };
-  board: Board;
-}
 
 type None = undefined;
 type Maybe<T> = T | None;
@@ -51,6 +47,14 @@ const AppView: React.SFC<{}> = props => {
   return <div style={MenuStyle}>{props.children}</div>;
 };
 
+/**
+ * APP VIEW
+ */
+
+interface Props {
+  game: Game;
+}
+
 @observer
 class App extends React.Component<Props, {}> {
   render() {
@@ -58,9 +62,12 @@ class App extends React.Component<Props, {}> {
   }
 
   private renderBoardLines() {
-    const { board, size } = this.props;
+    const { game } = this.props;
+    const { boardSize, board } = game;
 
-    const places: Maybe<Piece>[] = new Array(size.x * size.y).fill(undefined);
+    const places: Maybe<Piece>[] = new Array(boardSize.x * boardSize.y).fill(
+      undefined
+    );
     board.placeMap.forEach((p, index) => {
       if (p instanceof Piece) places[index] = p;
     });
