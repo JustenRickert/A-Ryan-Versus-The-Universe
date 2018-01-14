@@ -4,18 +4,12 @@ const margin = '55px';
 
 export const BoardStyle = {
   display: 'grid',
-  grid: `auto-flow ${margin} / repeat(${boardConf.x}, ${margin})`
+  grid: `auto-flow ${margin} / repeat(${boardConf.x}, ${margin})`,
+  flex: '4'
 };
 
-export const SquareStyle = {
-  border: '1px solid black',
-  display: 'flex'
-};
-
-export const RedSquareStyle = {
-  border: '1px solid black',
-  display: 'flex',
-  backgroundColor: 'red'
+export const EmptyStyle = {
+  margin: 'auto'
 };
 
 export const IconStyle = {
@@ -25,6 +19,23 @@ export const IconStyle = {
   border: '1px solid black'
 };
 
-export const EmptyStyle = {
-  margin: 'auto'
+export const KeyValueStyle = {
+  color: 'red'
+};
+
+export const MainStyle = { display: 'flex' };
+
+export const LoggerStyle = {
+  flex: '1'
+};
+
+export const RedSquareStyle = {
+  border: '1px solid black',
+  display: 'flex',
+  backgroundColor: 'red'
+};
+
+export const SquareStyle = {
+  border: '1px solid black',
+  display: 'flex'
 };

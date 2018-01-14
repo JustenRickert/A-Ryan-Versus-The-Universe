@@ -3,32 +3,30 @@ import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 
 import { boardConf } from '../constant';
-import { Coordinate } from '../game/coordinate';
-import { Board } from '../game/board';
+import Coordinate from '../game/coordinate';
+import Game from '../game/game';
+import Piece from '../game/piece';
 
-import Piece from '../game/pieces';
+import Logger from './Logger';
 import {
   BoardStyle,
   EmptyStyle,
-  SquareStyle,
+  IconStyle,
+  MainStyle,
   RedSquareStyle,
-  IconStyle
+  SquareStyle
 } from './style';
 import './App.css';
 
-interface Props {
-  size: { x: number; y: number };
-  board: Board;
-}
-
 type None = undefined;
+type Maybe<T> = T | None;
 
-interface P {
+interface PieceProps {
   index: number;
   piece: Piece | None;
 }
 
-const PieceView: React.SFC<P> = props => {
+const PieceView: React.SFC<PieceProps> = props => {
   return (
     <div
       className="board-piece"
@@ -44,28 +42,49 @@ const PieceView: React.SFC<P> = props => {
   );
 };
 
+const Board: React.SFC<{ places: Maybe<Piece>[] }> = props => {
+  const { places } = props;
+  return (
+    <div style={BoardStyle}>
+      {places.map((piece, i) => <PieceView key={i} index={i} piece={piece} />)}
+    </div>
+  );
+};
+
+const Main: React.SFC<{}> = props => {
+  return <div style={MainStyle}>{props.children}</div>;
+};
+
+/**
+ * APP VIEW
+ */
+
+interface Props {
+  game: Game;
+}
+
 @observer
-class App extends React.Component<Props, {}> {
+export default class App extends React.Component<Props, {}> {
   render() {
     return <div className="App">{this.renderBoardLines()}</div>;
   }
 
   private renderBoardLines() {
-    const { board, size } = this.props;
+    const { game } = this.props;
+    const { boardSize, board } = game;
 
-    const places: (Piece | None)[] = new Array(size.x * size.y).fill(undefined);
-    board.placeMap.forEach(p => {
-      if (p instanceof Piece) places[Coordinate.toNumber(p.c)] = p;
+    const places: Maybe<Piece>[] = new Array(boardSize.x * boardSize.y).fill(
+      undefined
+    );
+    board.placeMap.forEach((p, index) => {
+      if (p instanceof Piece) places[index] = p;
     });
 
     return (
-      <div style={BoardStyle}>
-        {places.map((piece, i) => (
-          <PieceView key={i} index={i} piece={piece} />
-        ))}
-      </div>
+      <Main>
+        <Logger game={game} />
+        <Board places={places} />
+      </Main>
     );
   }
 }
-
-export default App;
