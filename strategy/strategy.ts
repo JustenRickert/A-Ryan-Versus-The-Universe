@@ -1,8 +1,7 @@
 import { sample } from 'lodash';
 
-import game
-
-import Coordinate from './coordinate';
+import game from '../game/coordinate';
+import Coordinate from '../game/coordinate';
 
 class Strategy {
   static randomMove(coordinates: Coordinate[]) {
