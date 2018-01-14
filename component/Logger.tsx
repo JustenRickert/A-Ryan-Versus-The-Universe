@@ -14,10 +14,12 @@ const PiecesCoordinates: React.SFC<{
   const { white, black } = props;
   return (
     <React.Fragment>
-      <ListView>
+      <ListView title="White Pieces">
         {white.pieces.map((p, i) => (
           <KeyValueView key={i} value={p.toCoordinateString()} />
         ))}
+      </ListView>
+      <ListView title="Black Pieces">
         {black.pieces.map((p, i) => (
           <KeyValueView key={i} value={p.toCoordinateString()} />
         ))}
