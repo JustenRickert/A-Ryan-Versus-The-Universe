@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import * as _ from 'lodash';
 
 import App, { MenuView, PurchaseView } from './component/App';
+import { Style } from './component/style';
 import MatchView from './component/MatchView';
 import Player from './game/player';
 import { gameContext } from './game/game';
@@ -13,7 +14,7 @@ const game = gameContext;
 
 ReactDOM.render(
   <Router>
-    <div>
+    <div style={Style}>
       <Route path="/match" component={MatchView} />
       <Route path="/purchase" component={PurchaseView} />
       <Route path="/" component={MenuView} />

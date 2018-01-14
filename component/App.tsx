@@ -17,12 +17,13 @@ import {
   RedSquareStyle,
   SquareStyle
 } from './style';
-import './App.css';
 
 export const MenuView = (props: {}) => (
   <Main>
     <span>
       <Link to="/match">{`This is always the menu thing`}</Link>
+      <br />
+      <Link to="/purchase">{`This is always purchasing time`}</Link>
     </span>
   </Main>
 );

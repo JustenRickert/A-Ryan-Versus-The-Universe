@@ -4,6 +4,10 @@ const boardMargin = '55px';
 const itemMargin = '4px';
 const border = '1px solid black';
 
+export const Style = {
+  fontFamily: 'Inconsolata'
+};
+
 export const BoardStyle = {
   display: 'grid',
   grid: `auto-flow ${boardMargin} / repeat(${boardSize.x}, ${boardMargin})`,
@@ -17,8 +21,11 @@ export const EmptyStyle = {
 export const IconStyle = {
   margin: 'auto',
   width: '20px',
+  textAlign: 'center',
   border: `${border}`,
-  borderRadius: '10px'
+  borderRadius: '10px',
+  color: 'black',
+  backgroundColor: 'white'
 };
 
 export const BlackIconStyle = {
@@ -43,7 +50,8 @@ export const LogCardStyle = {
   flex: '1',
   padding: '10px',
   margin: `${itemMargin}`,
-  border: `${border}`
+  border: `${border}`,
+  textAlign: 'center'
 };
 
 export const LoggerStyle = {
