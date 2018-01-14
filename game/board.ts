@@ -1,4 +1,4 @@
-import { observable, computed, toJS } from 'mobx';
+import { action, observable, computed, toJS } from 'mobx';
 
 import { boardSize } from '../constant';
 
@@ -18,7 +18,6 @@ export default class Board {
   @observable white: Player;
   @observable black: Player;
 
-  @computed
   get pieces() {
     return [...this.white.pieces, ...this.black.pieces];
   }
@@ -31,7 +30,6 @@ export default class Board {
    * `toNumber`. i.e. `{x: 0, y:0} -> 0`, `{x:0, y:1} -> board length - 1`,
    * `...`, `{x: board length -1, y: board height - 1}`.
    */
-  @computed
   get placeMap() {
     const placeMap = new Map<number, Piece>();
     for (const p of this.pieces) {
@@ -40,7 +38,8 @@ export default class Board {
     return placeMap;
   }
 
-  places = (): Maybe<Piece>[] => {
+  @action
+  places = () => {
     const places: Maybe<Piece>[] = new Array(
       gameContext.boardSize.x * gameContext.boardSize.y
     ).fill(undefined);

@@ -6,11 +6,15 @@ import Player from '../game/player';
 import Piece from '../game/piece';
 import Game from '../game/game';
 
-import { ListView, KeyValueView } from './Parts';
+import { LogCard, ListView, KeyValueView } from './Parts';
 
-import { LoggerStyle, LogCardStyle } from './style';
+import { LoggerStyle } from './style';
 
-const LogCardListView: React.SFC<{
+interface P {
+  game: Game;
+}
+
+const LogCardTeamListView: React.SFC<{
   white: Player;
   black: Player;
 }> = props => {
@@ -33,14 +37,6 @@ const LogCardListView: React.SFC<{
   );
 };
 
-const LogCard: React.SFC<{ piece: Piece }> = props => (
-  <div style={LogCardStyle}>{props.children}</div>
-);
-
-interface P {
-  game: Game;
-}
-
 @observer
 export default class Logger extends React.Component<P, {}> {
   render() {
@@ -49,7 +45,7 @@ export default class Logger extends React.Component<P, {}> {
     return (
       <div style={LoggerStyle}>
         {`Total Time: ${time}`}
-        <LogCardListView white={white} black={black} />
+        <LogCardTeamListView white={white} black={black} />
       </div>
     );
   }

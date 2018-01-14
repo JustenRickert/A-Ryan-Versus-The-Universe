@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { computed } from 'mobx';
+import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
 import Controller from '../controller/controller';
 import Game, { gameContext } from '../game/game';
-import Piece from '../game/piece';
 import { Team } from '../game/player';
 import { Maybe, None } from '../util/util';
 
 import Logger from './Logger';
+import { PieceView } from './Parts';
 import { Main } from './App';
+import { Board } from './Parts';
 import {
   BoardStyle,
   SquareStyle,
@@ -20,50 +21,7 @@ import {
   EmptyStyle
 } from './style';
 
-interface PieceProps {
-  index: number;
-  piece: Piece | None;
-}
-
-const PieceView: React.SFC<PieceProps> = props => {
-  const { piece, index } = props;
-  return (
-    <div
-      className="board-piece"
-      style={index % 2 === 0 ? SquareStyle : RedSquareStyle}
-      key={index}
-    >
-      {piece ? (
-        <div style={piece.team === Team.White ? IconStyle : BlackIconStyle}>
-          {piece.symbol}
-        </div>
-      ) : (
-        <div style={EmptyStyle} />
-      )}
-    </div>
-  );
-};
-
-@observer
-class Board extends React.Component<{ game: Game }, {}> {
-  render() {
-    const { time } = this.props.game;
-    return <div style={BoardStyle}>{this.renderBoard()}</div>;
-  }
-
-  renderBoard() {
-    const { game } = this.props;
-    const places = game.board.places;
-
-    return (
-      <React.Fragment>
-        {places().map((piece, i) => (
-          <PieceView key={i} index={i} piece={piece} />
-        ))}
-      </React.Fragment>
-    );
-  }
-}
+const BoardView = observer(Board);
 
 interface State {
   controller: Controller;
@@ -100,7 +58,7 @@ class MatchView extends React.Component<{}, State> {
     return (
       <Main>
         <Logger game={this.game} />
-        <Board game={this.game} />
+        <BoardView game={this.game} />
         <Link to="/purchase">{`Click ETH ME`}</Link>
       </Main>
     );

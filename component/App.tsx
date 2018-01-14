@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import Coordinate from '../game/coordinate';
 import Game, { gameContext } from '../game/game';
 import Piece from '../game/piece';
-import { Maybe, None } from '../util/util';
+import { Maybe, Time, None } from '../util/util';
 
 import Logger from './Logger';
 import {
@@ -35,7 +35,7 @@ export const PurchaseView = (props: {}) => (
   </Main>
 );
 
-export const Main: React.SFC<{}> = props => {
+export const Main: React.SFC<{ time?: Time }> = props => {
   return (
     <div className="App" style={MainStyle}>
       {props.children}

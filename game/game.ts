@@ -8,7 +8,7 @@ import { PShape, MShape } from './piece';
 
 export default class GameContext {
   boardSize: { x: number; y: number };
-  board: Board;
+  @observable board: Board;
   @observable time: number;
   @observable black: Player;
   @observable white: Player;

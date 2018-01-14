@@ -18,7 +18,7 @@ export default abstract class Piece {
   readonly symbol: Symbol;
   readonly cd: Cooldown;
 
-  c: Coordinate;
+  @observable c: Coordinate;
   @observable ti: Timeout = 0;
 
   @action
