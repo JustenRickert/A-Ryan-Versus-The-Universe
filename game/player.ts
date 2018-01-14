@@ -36,20 +36,4 @@ export default class Player {
   }
 
   @action forward = () => this.pieces.forEach(p => p.forward());
-
-  /**
-   * Moves piece if it's possible to move the piece.
-   */
-  move = (board: Board, piece: Piece, target: Coordinate) => {
-    if (board.outbounds(target)) {
-      throw new Error("Can't move there!");
-    }
-
-    const targetC = board.placeMap.get(toNumber(target));
-    if (targetC) board.placeMap.delete(toNumber(target));
-    board.placeMap.delete(toNumber(piece.c));
-
-    piece.c = new Coordinate(target);
-    board.placeMap.set(toNumber(target), piece);
-  };
 }

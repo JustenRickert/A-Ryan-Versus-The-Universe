@@ -1,1 +1,1 @@
-export const boardConf: { x: number; y: number } = { x: 11, y: 11 };
+export const boardSize: { x: number; y: number } = { x: 9, y: 9 };

@@ -1,35 +1,24 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import * as _ from 'lodash';
 
-import App from './component/App';
-import Strategy from './strategy/strategy';
+import App, { MenuView, PurchaseView } from './component/App';
+import MatchView from './component/MatchView';
 import Player from './game/player';
 import { gameContext } from './game/game';
 import registerServiceWorker from './registerServiceWorker';
 
 const game = gameContext;
-const randomMove = Strategy.randomMove;
 
-setInterval(() => {
-  [game.white, game.black].forEach((player: Player) =>
-    player.pieces.forEach(p => {
-      if (!p.canMove) {
-        return;
-      }
-
-      const move = randomMove(p);
-      if (move) {
-        player.move(game.board, p, move);
-        p.reset();
-      }
-    })
-  );
-
-  game.white.forward();
-  game.black.forward();
-  game.forward();
-}, 1000);
-
-ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);
+ReactDOM.render(
+  <Router>
+    <div>
+      <Route path="/match" component={MatchView} />
+      <Route path="/purchase" component={PurchaseView} />
+      <Route path="/" component={MenuView} />
+    </div>
+  </Router>,
+  document.getElementById('root') as HTMLElement
+);
 registerServiceWorker();

@@ -1,36 +1,57 @@
-import { observable, computed, toJS } from 'mobx';
+import { action, observable, computed, toJS } from 'mobx';
 
-import { boardConf } from '../constant';
+import { boardSize } from '../constant';
 
-// import Maybe from '../util/util';
+import { Maybe } from '../util/util';
 
 import Coordinate from './coordinate';
+import { gameContext } from './game';
 import Piece, { MShape } from './piece';
 import Player, { Team } from './player';
 
 const toNumber = Coordinate.toNumber;
 const equal = Coordinate.equal;
-type Maybe<T> = T | undefined;
 
 export type Placement = { piece: Piece; c: Coordinate };
 
 export default class Board {
+  size: { x: number; y: number };
   @observable white: Player;
   @observable black: Player;
 
-  /**
-   * Placemap is how the board gets updated. It's an observable with a
-   * React.Component watching it.
-   */
-  @observable placeMap: Map<number, Maybe<Piece>>;
   get pieces() {
     return [...this.white.pieces, ...this.black.pieces];
   }
 
-  private size: { x: number; y: number };
+  /**
+   * `PlaceMap` elements are a number, and a `Piece` (corresponding to something
+   * like chess pieces places on a chess board). They have to be number because
+   * `mobx` doesn't take object for map `key` slot. Though there is an
+   * isomorphism between the coordinate matrix and the set it maps to with
+   * `toNumber`. i.e. `{x: 0, y:0} -> 0`, `{x:0, y:1} -> board length - 1`,
+   * `...`, `{x: board length -1, y: board height - 1}`.
+   */
+  get placeMap() {
+    const placeMap = new Map<number, Piece>();
+    for (const p of this.pieces) {
+      placeMap.set(toNumber(p.c), p);
+    }
+    return placeMap;
+  }
+
+  @action
+  places = () => {
+    const places: Maybe<Piece>[] = new Array(
+      gameContext.boardSize.x * gameContext.boardSize.y
+    ).fill(undefined);
+    this.placeMap.forEach((p, index) => {
+      if (p instanceof Piece) places[index] = p;
+    });
+    return places;
+  };
 
   constructor(white: Player, black: Player) {
-    this.size = boardConf;
+    this.size = boardSize;
     this.white = white;
     this.black = black;
 
@@ -56,19 +77,6 @@ max: ${this.size.x}, ${this.size.y}
 `);
       }
     });
-
-    /**
-     * `Placements` are a number, and a `Piece` (corresponding to something like
-     * chess pieces places on a chess board). They have to be number because
-     * `mobx` doesn't take object for map `key` slot. Though there is an
-     * isomorphism between the coordinate matrix and the set it maps to with
-     * `toNumber`. i.e. `{x: 0, y:0} -> 0`, `{x:0, y:1} -> board length - 1`,
-     * `...`, `{x: board length -1, y: board height - 1}`.
-     */
-    this.placeMap = new Map<number, Piece>();
-    for (const p of this.pieces) {
-      this.placeMap.set(toNumber(p.c), p);
-    }
   }
 
   at = (c: Coordinate): Maybe<Piece> => this.placeMap.get(toNumber(c));
@@ -84,4 +92,20 @@ max: ${this.size.x}, ${this.size.y}
   };
 
   movablePieces = () => [...this.white.allCanMove, ...this.black.allCanMove];
+
+  /**
+   * Moves piece if it's possible to move the piece.
+   */
+  move = (piece: Piece, target: Coordinate) => {
+    if (this.outbounds(target)) {
+      throw new Error("Can't move there!");
+    }
+
+    const targetC = this.placeMap.get(toNumber(target));
+    if (targetC) this.placeMap.delete(toNumber(target));
+    this.placeMap.delete(toNumber(piece.c));
+
+    piece.c = new Coordinate(target);
+    this.placeMap.set(toNumber(target), piece);
+  };
 }

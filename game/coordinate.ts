@@ -1,4 +1,4 @@
-import { boardConf } from '../constant'; // TODO this will be deprectade
+import { boardSize } from '../constant'; // TODO this will be deprectade
 
 export default class Coordinate {
   x: number;
@@ -13,7 +13,7 @@ export default class Coordinate {
   }
 
   static toNumber(c: Coordinate): number {
-    return boardConf.x * c.y + c.x;
+    return boardSize.x * c.y + c.x;
   }
 
   static diff(c1: Coordinate, c2: Coordinate): Coordinate {

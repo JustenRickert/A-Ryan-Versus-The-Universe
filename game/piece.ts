@@ -1,3 +1,5 @@
+import { observable } from 'mobx';
+
 import Coordinate from './coordinate';
 import Board from './board';
 import { Team } from './player';
@@ -16,8 +18,8 @@ export default abstract class Piece {
   readonly symbol: Symbol;
   readonly cd: Cooldown;
 
-  c: Coordinate;
-  ti: Timeout = 0;
+  @observable c: Coordinate;
+  @observable ti: Timeout = 0;
 
   forward = () => {
     this.ti <= 0 ? (this.ti = 0) : (this.ti -= 1);
