@@ -53,6 +53,7 @@ export default class Controller {
 
       if (target) {
         board.move(p, target);
+        p.reset();
       }
     });
   }

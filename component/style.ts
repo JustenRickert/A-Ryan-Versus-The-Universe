@@ -1,10 +1,12 @@
 import { boardSize } from '../constant';
 
-const margin = '55px';
+const boardMargin = '55px';
+const itemMargin = '4px';
+const border = '1px solid black';
 
 export const BoardStyle = {
   display: 'grid',
-  grid: `auto-flow ${margin} / repeat(${boardSize.x}, ${margin})`,
+  grid: `auto-flow ${boardMargin} / repeat(${boardSize.x}, ${boardMargin})`,
   flex: '4'
 };
 
@@ -15,8 +17,14 @@ export const EmptyStyle = {
 export const IconStyle = {
   margin: 'auto',
   width: '20px',
-  borderRadius: '10px',
-  border: '1px solid black'
+  border: `${border}`,
+  borderRadius: '10px'
+};
+
+export const BlackIconStyle = {
+  ...IconStyle,
+  color: 'white',
+  backgroundColor: 'black'
 };
 
 export const KeyValueStyle = {
@@ -34,22 +42,22 @@ export const MainStyle = { display: 'flex' };
 export const LogCardStyle = {
   flex: '1',
   padding: '10px',
-  margin: '3px',
-  border: '1px solid black'
+  margin: `${itemMargin}`,
+  border: `${border}`
 };
 
 export const LoggerStyle = {
   flex: '1',
-  margin: '7px'
+  margin: `${itemMargin}`
 };
 
 export const RedSquareStyle = {
-  border: '1px solid black',
+  border: `${border}`,
   display: 'flex',
   backgroundColor: 'red'
 };
 
 export const SquareStyle = {
-  border: '1px solid black',
+  border: `${border}`,
   display: 'flex'
 };

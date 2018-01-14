@@ -6,6 +6,7 @@ import { observer } from 'mobx-react';
 import Game, { gameContext } from '../game/game';
 import Controller from '../controller/controller';
 import Piece from '../game/piece';
+import { Team } from '../game/player';
 import { Maybe, None } from '../util/util';
 
 import Logger from './Logger';
@@ -14,6 +15,7 @@ import {
   BoardStyle,
   SquareStyle,
   RedSquareStyle,
+  BlackIconStyle,
   IconStyle,
   EmptyStyle
 } from './style';
@@ -24,14 +26,17 @@ interface PieceProps {
 }
 
 const PieceView: React.SFC<PieceProps> = props => {
+  const { piece, index } = props;
   return (
     <div
       className="board-piece"
-      style={props.index % 2 === 0 ? SquareStyle : RedSquareStyle}
-      key={props.index}
+      style={index % 2 === 0 ? SquareStyle : RedSquareStyle}
+      key={index}
     >
-      {props.piece ? (
-        <div style={IconStyle}>{props.piece.symbol}</div>
+      {piece ? (
+        <div style={piece.team === Team.White ? IconStyle : BlackIconStyle}>
+          {piece.symbol}
+        </div>
       ) : (
         <div style={EmptyStyle} />
       )}
@@ -83,7 +88,7 @@ class MatchView extends React.Component<{}, State> {
 
   componentDidMount() {
     this.loopID = window.setInterval(() => {
-      this.loop();
+      this.state.controller.loop();
     }, 1000);
   }
 
@@ -100,10 +105,6 @@ class MatchView extends React.Component<{}, State> {
       </Main>
     );
   }
-
-  handleLinkClick = () => clearInterval(this.loopID);
-
-  loop = () => this.state.controller.loop();
 }
 
 export default MatchView;
