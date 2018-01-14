@@ -1,4 +1,4 @@
-import { boardConf } from '../constant';
+import { boardConf } from '../constant'; // TODO this will be deprectade
 
 export default class Coordinate {
   x: number;

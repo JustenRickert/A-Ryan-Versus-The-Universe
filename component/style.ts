@@ -19,7 +19,11 @@ export const IconStyle = {
   border: '1px solid black'
 };
 
-export const MenuStyle = { display: 'flex' };
+export const KeyValueStyle = {
+  color: 'red'
+};
+
+export const MainStyle = { display: 'flex' };
 
 export const LoggerStyle = {
   flex: '1'

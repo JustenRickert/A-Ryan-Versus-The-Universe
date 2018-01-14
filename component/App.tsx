@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 
 import { boardConf } from '../constant';
 import Coordinate from '../game/coordinate';
-// import Board from '../game/board';
 import Game from '../game/game';
 import Piece from '../game/piece';
 
@@ -13,7 +12,7 @@ import {
   BoardStyle,
   EmptyStyle,
   IconStyle,
-  MenuStyle,
+  MainStyle,
   RedSquareStyle,
   SquareStyle
 } from './style';
@@ -43,8 +42,17 @@ const PieceView: React.SFC<PieceProps> = props => {
   );
 };
 
-const AppView: React.SFC<{}> = props => {
-  return <div style={MenuStyle}>{props.children}</div>;
+const Board: React.SFC<{ places: Maybe<Piece>[] }> = props => {
+  const { places } = props;
+  return (
+    <div style={BoardStyle}>
+      {places.map((piece, i) => <PieceView key={i} index={i} piece={piece} />)}
+    </div>
+  );
+};
+
+const Main: React.SFC<{}> = props => {
+  return <div style={MainStyle}>{props.children}</div>;
 };
 
 /**
@@ -56,7 +64,7 @@ interface Props {
 }
 
 @observer
-class App extends React.Component<Props, {}> {
+export default class App extends React.Component<Props, {}> {
   render() {
     return <div className="App">{this.renderBoardLines()}</div>;
   }
@@ -73,26 +81,10 @@ class App extends React.Component<Props, {}> {
     });
 
     return (
-      <AppView>
-        <Logger />
-        {this.renderBoard(places)}
-      </AppView>
-    );
-  }
-
-  private renderBoard(places: Maybe<Piece>[]) {
-    return <div style={BoardStyle}>{this.renderPieceViews(places)}</div>;
-  }
-
-  private renderPieceViews(places: Maybe<Piece>[]) {
-    return (
-      <React.Fragment>
-        {places.map((piece, i) => (
-          <PieceView key={i} index={i} piece={piece} />
-        ))}
-      </React.Fragment>
+      <Main>
+        <Logger game={game} />
+        <Board places={places} />
+      </Main>
     );
   }
 }
-
-export default App;

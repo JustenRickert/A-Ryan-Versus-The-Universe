@@ -35,6 +35,8 @@ export default abstract class Piece {
   }
 
   emptyMoves = (b: Board) => this.moves(b).filter(c => !b.at(c));
+
+  toCoordinateString = () => `p{${this.c.x},${this.c.y}`;
 }
 
 export class MShape extends Piece {
