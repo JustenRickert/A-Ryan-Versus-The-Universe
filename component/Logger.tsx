@@ -3,11 +3,12 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 
 import Player from '../game/player';
+import Piece from '../game/piece';
 import Game from '../game/game';
 
 import { ListView, KeyValueView } from './Parts';
 
-import { LoggerStyle } from './style';
+import { LoggerStyle, LogCardStyle } from './style';
 
 const CoordinatesAndTimes: React.SFC<{
   white: Player;
@@ -19,16 +20,22 @@ const CoordinatesAndTimes: React.SFC<{
       {[white, black].map((player, playerIndex) => (
         <ListView key={playerIndex} title={player.title}>
           {player.pieces.map((p, pieceIndex) => (
-            <KeyValueView
-              key={pieceIndex}
-              value={`${p.coordinateString},${p.ti}`}
-            />
+            <LogCard piece={p}>
+              <KeyValueView
+                key={pieceIndex}
+                value={`${p.coordinateString},${p.ti}`}
+              />
+            </LogCard>
           ))}
         </ListView>
       ))}
     </React.Fragment>
   );
 };
+
+const LogCard: React.SFC<{ piece: Piece }> = props => (
+  <div style={LogCardStyle}>{props.children}</div>
+);
 
 interface P {
   game: Game;

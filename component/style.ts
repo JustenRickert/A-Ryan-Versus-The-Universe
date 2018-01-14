@@ -31,8 +31,16 @@ export const ListStyle = {
 
 export const MainStyle = { display: 'flex' };
 
+export const LogCardStyle = {
+  flex: '1',
+  padding: '10px',
+  margin: '3px',
+  border: '1px solid black'
+};
+
 export const LoggerStyle = {
-  flex: '1'
+  flex: '1',
+  margin: '7px'
 };
 
 export const RedSquareStyle = {
