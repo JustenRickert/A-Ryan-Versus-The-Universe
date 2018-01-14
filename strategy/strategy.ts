@@ -1,10 +1,15 @@
 import { sample } from 'lodash';
 
-import game from '../game/coordinate';
+import { gameContext } from '../game/game';
 import Coordinate from '../game/coordinate';
+import Piece from '../game/piece';
+
+const board = gameContext.board;
 
 class Strategy {
-  static randomMove(coordinates: Coordinate[]) {
-    sample(coordinates);
-  }
+  randomMove = (p: Piece) => sample(p.emptyMoves(board));
 }
+
+const strategy = new Strategy();
+
+export default strategy;

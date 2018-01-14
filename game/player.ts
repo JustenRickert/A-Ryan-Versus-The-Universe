@@ -1,3 +1,5 @@
+import { action, observable } from 'mobx';
+
 import Board from './board';
 import Coordinate from './coordinate';
 import Placement from './board';
@@ -11,15 +13,18 @@ export enum Team {
 }
 
 export default class Player {
+  title: string;
   team: Team;
-  pieces: Piece[];
-  placements: Map<number, Piece>;
+  @observable pieces: Piece[];
+  @observable placements: Map<number, Piece>;
 
   get allCanMove() {
     return this.pieces.filter(p => p.canMove);
   }
 
   constructor(team: Team, pieces: Piece[]) {
+    this.title = team === Team.White ? 'White' : 'Black';
+
     this.team = team;
 
     this.pieces = pieces;
@@ -30,7 +35,7 @@ export default class Player {
     }
   }
 
-  forward = () => this.pieces.forEach(p => p.forward());
+  @action forward = () => this.pieces.forEach(p => p.forward());
 
   /**
    * Moves piece if it's possible to move the piece.

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { toJS } from 'mobx';
+import { computed, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 
 import { boardConf } from '../constant';
 import Coordinate from '../game/coordinate';
-import Game from '../game/game';
+import Game, { gameContext } from '../game/game';
 import Piece from '../game/piece';
 
 import Logger from './Logger';
@@ -59,19 +59,19 @@ const Main: React.SFC<{}> = props => {
  * APP VIEW
  */
 
-interface Props {
-  game: Game;
-}
-
 @observer
-export default class App extends React.Component<Props, {}> {
+export default class App extends React.Component<{}, {}> {
+  @computed
+  get gameContext() {
+    return gameContext;
+  }
+
   render() {
     return <div className="App">{this.renderBoardLines()}</div>;
   }
 
   private renderBoardLines() {
-    const { game } = this.props;
-    const { boardSize, board } = game;
+    const { boardSize, board } = gameContext;
 
     const places: Maybe<Piece>[] = new Array(boardSize.x * boardSize.y).fill(
       undefined
@@ -82,7 +82,7 @@ export default class App extends React.Component<Props, {}> {
 
     return (
       <Main>
-        <Logger game={game} />
+        <Logger game={this.gameContext} />
         <Board places={places} />
       </Main>
     );

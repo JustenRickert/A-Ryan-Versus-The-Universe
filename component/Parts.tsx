@@ -1,20 +1,15 @@
 import * as React from 'react';
 import Coordinate from '../game/coordinate';
 
-import { KeyValueStyle } from './style';
+import { KeyValueStyle, ListStyle } from './style';
 
-export const ListView: React.SFC<{ title: String }> = props => (
-  <React.Fragment>
+export const ListView: React.SFC<{ title: string }> = props => (
+  <div style={ListStyle}>
     {props.title}
     {props.children}
-  </React.Fragment>
+  </div>
 );
 
 export const KeyValueView: React.SFC<{
-  key: number;
   value: string;
-}> = props => (
-  <div style={KeyValueStyle} key={props.key}>
-    {`${props.value}}`}
-  </div>
-);
+}> = props => <div style={KeyValueStyle}>{`${props.value}`}</div>;

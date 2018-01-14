@@ -14,6 +14,7 @@ abstract class Fighter extends Piece {
 }
 
 class MFighter extends Fighter {
+  cd = 4;
   team: Team;
 
   constructor(team: Team, c: Coordinate) {

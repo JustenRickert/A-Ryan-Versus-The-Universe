@@ -12,8 +12,8 @@ type Maybe<T> = T | undefined;
 export type Placement = { piece: Piece; c: Coordinate };
 
 export default class Board {
-  white: Player;
-  black: Player;
+  @observable white: Player;
+  @observable black: Player;
 
   /**
    * Placemap is how the board gets updated. It's an observable with a
@@ -47,8 +47,7 @@ op: x: ${op.c.x}, y: ${op.c.y}
           p.c.x >= this.size.x ||
           p.c.y >= this.size.y
         )
-          throw new Error(`
-Cannot place outside of the board!
+          throw new Error(`Cannot place outside of the board!
 x: ${p.c.x}, y: ${p.c.y}
 max: ${this.size.x}, ${this.size.y}
 `);

@@ -1,3 +1,5 @@
+import { action, observable } from 'mobx';
+
 import Coordinate from './coordinate';
 import Board from './board';
 import { Team } from './player';
@@ -17,11 +19,14 @@ export default abstract class Piece {
   readonly cd: Cooldown;
 
   c: Coordinate;
-  ti: Timeout;
+  @observable ti: Timeout = 0;
 
+  @action
   forward = () => {
-    this.ti -= 1;
+    this.ti <= 0 ? (this.ti = 0) : (this.ti -= 1);
   };
+
+  @action
   reset = () => {
     this.ti = this.cd;
   };
@@ -30,13 +35,15 @@ export default abstract class Piece {
     return this.ti <= 0;
   }
 
+  get coordinateString() {
+    return `${this.symbol}{${this.c.x},${this.c.y}}`;
+  }
+
   constructor(symbol: string) {
     this.symbol = symbol;
   }
 
   emptyMoves = (b: Board) => this.moves(b).filter(c => !b.at(c));
-
-  toCoordinateString = () => `${this.symbol}{${this.c.x},${this.c.y}`;
 }
 
 export class MShape extends Piece {

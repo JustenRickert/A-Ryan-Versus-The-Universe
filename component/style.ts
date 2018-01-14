@@ -20,7 +20,13 @@ export const IconStyle = {
 };
 
 export const KeyValueStyle = {
-  color: 'red'
+  color: 'red',
+  flex: '1'
+};
+
+export const ListStyle = {
+  display: 'flex',
+  'flex-direction': 'column'
 };
 
 export const MainStyle = { display: 'flex' };

@@ -5,16 +5,20 @@ import { PShape, MShape } from './piece';
 import Board from './board';
 
 export default class GameContext {
-  @observable boardSize = { x: 11, y: 11 };
-  @observable board: Board;
-  @observable white: Player;
+  boardSize = { x: 11, y: 11 };
+  board: Board;
+  @observable time: number;
   @observable black: Player;
+  @observable white: Player;
 
   constructor(b: Board, wht: Player, blk: Player) {
     this.board = b;
     this.white = wht;
     this.black = blk;
+    this.time = 0;
   }
+
+  forward = () => this.time++;
 }
 
 export const createContext = (b: Board, wht: Player, blk: Player) =>
@@ -32,4 +36,4 @@ const black = new Player(Team.Black, [
 ]);
 const board = new Board(white, black);
 
-export const game = createContext(board, white, black);
+export const gameContext = observable(createContext(board, white, black));
