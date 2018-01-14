@@ -3,7 +3,12 @@ import Coordinate from '../game/coordinate';
 
 import { KeyValueStyle } from './style';
 
-export const ListView: React.SFC<{}> = props => <div>{props.children}</div>;
+export const ListView: React.SFC<{ title: String }> = props => (
+  <React.Fragment>
+    {props.title}
+    {props.children}
+  </React.Fragment>
+);
 
 export const KeyValueView: React.SFC<{
   key: number;
