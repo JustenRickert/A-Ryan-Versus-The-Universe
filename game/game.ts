@@ -1,9 +1,10 @@
 import { observable } from 'mobx';
 
+import { boardSize } from '../constant';
+
+import Board from './board';
 import Player, { Team } from './player';
 import { PShape, MShape } from './piece';
-import Board from './board';
-import { boardSize } from '../constant';
 
 export default class GameContext {
   boardSize: { x: number; y: number };

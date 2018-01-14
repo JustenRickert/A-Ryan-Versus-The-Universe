@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 
-import Game, { gameContext } from '../game/game';
 import Controller from '../controller/controller';
+import Game, { gameContext } from '../game/game';
 import Piece from '../game/piece';
 import { Team } from '../game/player';
 import { Maybe, None } from '../util/util';

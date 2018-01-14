@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { computed, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { Maybe, None } from '../util/util';
 import Coordinate from '../game/coordinate';
 import Game, { gameContext } from '../game/game';
 import Piece from '../game/piece';
+import { Maybe, None } from '../util/util';
 
 import Logger from './Logger';
 import {

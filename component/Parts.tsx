@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import Coordinate from '../game/coordinate';
 
 import { KeyValueStyle, ListStyle } from './style';
