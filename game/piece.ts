@@ -1,5 +1,3 @@
-import { action, observable } from 'mobx';
-
 import Coordinate from './coordinate';
 import Board from './board';
 import { Team } from './player';
@@ -19,14 +17,12 @@ export default abstract class Piece {
   readonly cd: Cooldown;
 
   c: Coordinate;
-  @observable ti: Timeout = 0;
+  ti: Timeout = 0;
 
-  @action
   forward = () => {
     this.ti <= 0 ? (this.ti = 0) : (this.ti -= 1);
   };
 
-  @action
   reset = () => {
     this.ti = this.cd;
   };
