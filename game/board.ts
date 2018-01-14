@@ -1,6 +1,9 @@
 import { observable, computed, toJS } from 'mobx';
 
 import { boardConf } from '../constant';
+
+// import Maybe from '../util/util';
+
 import Coordinate from './coordinate';
 import Piece, { MShape } from './piece';
 import Player, { Team } from './player';
