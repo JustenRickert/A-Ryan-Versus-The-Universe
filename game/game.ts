@@ -1,6 +1,6 @@
 import { observable } from 'mobx';
 
-import { boardSize } from '../constant';
+import { BOARD_SIZE } from '../constant';
 
 import Board from './board';
 import Player, { Team } from './player';
@@ -14,7 +14,7 @@ export default class GameContext {
   @observable white: Player;
 
   constructor(b: Board, wht: Player, blk: Player) {
-    this.boardSize = boardSize;
+    this.boardSize = BOARD_SIZE;
     this.board = b;
     this.white = wht;
     this.black = blk;

@@ -1,5 +1,7 @@
 import { observable } from 'mobx';
 
+import { Maybe } from '../util/util';
+
 import Coordinate from './coordinate';
 import Board from './board';
 import { Team } from './player';
@@ -13,7 +15,7 @@ const sum = (a: Coordinate, b: Coordinate) => Coordinate.plus(a, b);
 
 export default abstract class Piece {
   abstract moves: (b: Board) => Coordinate[];
-  abstract team: Team;
+  abstract team: Maybe<Team>;
 
   readonly symbol: Symbol;
   readonly cd: Cooldown;
@@ -71,12 +73,12 @@ export class MShape extends Piece {
 export class PShape extends Piece {
   c: Coordinate;
   cd = 4;
-  team: Team;
+  team: Maybe<Team>;
 
-  constructor(team: Team, coordinate: Coordinate) {
+  constructor(team?: Team, coordinate?: Coordinate) {
     super('p');
     this.team = team;
-    this.c = coordinate;
+    this.c = coordinate || { x: -1, y: -1 };
   }
 
   moves = (b: Board): Coordinate[] => {

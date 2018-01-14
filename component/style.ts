@@ -1,4 +1,4 @@
-import { boardSize } from '../constant';
+import { BOARD_SIZE } from '../constant';
 
 const boardMargin = '55px';
 const itemMargin = '4px';
@@ -10,7 +10,7 @@ export const Style = {
 
 export const BoardStyle = {
   display: 'grid',
-  grid: `auto-flow ${boardMargin} / repeat(${boardSize.x}, ${boardMargin})`,
+  grid: `auto-flow ${boardMargin} / repeat(${BOARD_SIZE.x}, ${boardMargin})`,
   flex: '4'
 };
 

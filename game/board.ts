@@ -1,6 +1,6 @@
 import { action, observable, computed, toJS } from 'mobx';
 
-import { boardSize } from '../constant';
+import { BOARD_SIZE } from '../constant';
 
 import { Maybe } from '../util/util';
 
@@ -51,7 +51,7 @@ export default class Board {
   };
 
   constructor(white: Player, black: Player) {
-    this.size = boardSize;
+    this.size = BOARD_SIZE;
     this.white = white;
     this.black = black;
 

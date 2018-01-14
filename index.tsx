@@ -7,10 +7,9 @@ import App, { MenuView, PurchaseView } from './component/App';
 import { Style } from './component/style';
 import MatchView from './component/MatchView';
 import Player from './game/player';
-import { gameContext } from './game/game';
+import { gameContext as game } from './game/game';
+import { userContext as user } from './state/user';
 import registerServiceWorker from './registerServiceWorker';
-
-const game = gameContext;
 
 ReactDOM.render(
   <Router>
