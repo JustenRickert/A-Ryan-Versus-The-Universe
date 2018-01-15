@@ -4,7 +4,7 @@ import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
 import Controller from '../controller/controller';
-import Game, { gameContext } from '../game/game';
+import Game from '../game/game';
 import { Team } from '../game/player';
 import { Maybe, None } from '../util/util';
 
@@ -23,31 +23,32 @@ import {
 
 const BoardView = observer(Board);
 
-interface State {
-  controller: Controller;
+interface P {
+  game: Maybe<Game>;
+}
+
+interface S {
+  controller: Maybe<Controller>;
 }
 
 @observer
-class MatchView extends React.Component<{}, State> {
+class MatchView extends React.Component<P, S> {
   loopID: number;
 
-  @computed
-  get game() {
-    return gameContext;
-  }
-
-  constructor(props: {}) {
+  constructor(props: P) {
     super(props);
 
     this.state = {
-      controller: new Controller()
+      controller: this.props.game ? new Controller(this.props.game) : undefined
     };
   }
 
   componentDidMount() {
-    this.loopID = window.setInterval(() => {
-      this.state.controller.loop();
-    }, 1000);
+    if (this.props.game) {
+      this.loopID = window.setInterval(() => {
+        this.state.controller!.loop();
+      }, 1000);
+    }
   }
 
   componentWillUnmount() {
@@ -55,13 +56,16 @@ class MatchView extends React.Component<{}, State> {
   }
 
   render() {
-    return (
-      <Main>
-        <Logger game={this.game} />
-        <BoardView game={this.game} />
-        <Link to="/purchase">{`Click ETH ME`}</Link>
-      </Main>
-    );
+    if (this.props.game) {
+      return (
+        <Main>
+          <Logger game={this.props.game} />
+          <BoardView game={this.props.game} />
+        </Main>
+      );
+    } else {
+      return <Main>{`There is no game context`}</Main>;
+    }
   }
 }
 

@@ -4,8 +4,9 @@ import { computed, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 
 import Coordinate from '../game/coordinate';
-import Game, { gameContext } from '../game/game';
+import Game from '../game/game';
 import Piece from '../game/piece';
+import User, { userContext } from '../state/user';
 import { Maybe, Time, None } from '../util/util';
 
 import Logger from './Logger';
@@ -28,14 +29,6 @@ export const MenuView = (props: {}) => (
   </Main>
 );
 
-export const PurchaseView = (props: {}) => (
-  <Main>
-    <span>
-      <Link to="/match">{`Click the fuck outta ME`}</Link>
-    </span>
-  </Main>
-);
-
 export const Main: React.SFC<{ time?: Time }> = props => {
   return (
     <div className="App" style={MainStyle}>
@@ -48,27 +41,27 @@ export const Main: React.SFC<{ time?: Time }> = props => {
  * APP VIEW
  */
 
-@observer
-export default class App extends React.Component<{}, {}> {
-  @computed
-  get gameContext() {
-    return gameContext;
-  }
+// @observer
+// export default class App extends React.Component<{}, {}> {
+//   @computed
+//   get gameContext() {
+//     return gameContext;
+//   }
 
-  render() {
-    return <div className="App">{this.renderBoardLines()}</div>;
-  }
+//   render() {
+//     return <div className="App">{this.renderBoardLines()}</div>;
+//   }
 
-  private renderBoardLines() {
-    const { boardSize, board } = gameContext;
+//   private renderBoardLines() {
+//     const { boardSize, board } = gameContext;
 
-    const places: Maybe<Piece>[] = new Array(boardSize.x * boardSize.y).fill(
-      undefined
-    );
-    board.placeMap.forEach((p, index) => {
-      if (p instanceof Piece) places[index] = p;
-    });
+//     const places: Maybe<Piece>[] = new Array(boardSize.x * boardSize.y).fill(
+//       undefined
+//     );
+//     board.placeMap.forEach((p, index) => {
+//       if (p instanceof Piece) places[index] = p;
+//     });
 
-    return <Main>{this.props.children}</Main>;
-  }
-}
+//     return <Main>{this.props.children}</Main>;
+//   }
+// }

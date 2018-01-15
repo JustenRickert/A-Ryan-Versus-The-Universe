@@ -2,7 +2,7 @@ import * as React from 'react';
 import { observable } from 'mobx';
 
 import Coordinate from '../game/coordinate';
-import Game, { gameContext } from '../game/game';
+import Game from '../game/game';
 import Piece from '../game/piece';
 import Player, { Team } from '../game/player';
 import { Maybe } from '../util/util';
@@ -68,8 +68,7 @@ export const PieceView: React.SFC<PieceProps> = props => {
 
 export const Board: React.SFC<{ game: Game }> = props => {
   const { game } = props;
-  const { board, time } = game; // NOTE: Need time here for when observable
-  const { boardSize } = gameContext;
+  const { board, boardSize, time } = game; // NOTE: Need time here for when observable
 
   let places: Maybe<Piece>[];
   if (game) {

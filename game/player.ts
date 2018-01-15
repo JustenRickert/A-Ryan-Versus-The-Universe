@@ -5,8 +5,6 @@ import Coordinate from './coordinate';
 import Placement from './board';
 import Piece from './piece';
 
-const toNumber = Coordinate.toNumber;
-
 export enum Team {
   White = 'white',
   Black = 'black'
@@ -23,6 +21,15 @@ export default class Player {
   }
 
   constructor(team: Team, pieces: Piece[]) {
+    for (const p of pieces) {
+      if (!p.c) {
+        throw new Error(`
+All pieces given to a Player need to be given coordinates.
+No coordinates received.
+`);
+      }
+    }
+
     this.title = team === Team.White ? 'White' : 'Black';
 
     this.team = team;
@@ -31,7 +38,7 @@ export default class Player {
 
     this.placements = new Map();
     for (const p of pieces) {
-      this.placements.set(toNumber(p.c), p);
+      this.placements.set(Coordinate.toNumber(p.c!), p);
     }
   }
 

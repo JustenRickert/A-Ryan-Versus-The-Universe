@@ -23,15 +23,11 @@ class MFighter extends Fighter {
     this.c = c;
   }
 
-  moves = (b: Board): Coordinate[] => {
-    const coords = [
+  moves = (b: Board) =>
+    this._moves([
       { x: 1, y: 0 }, // Right
       { x: -1, y: 0 }, // Left
       { x: 0, y: 1 }, // Down
       { x: 0, y: -1 } // Up
-    ]
-      .map(c => sum(this.c, c))
-      .filter(c => !b.at(c) && b.inbounds(c));
-    return coords;
-  };
+    ]).filter(c => !b.at(c) && b.inbounds(c));
 }

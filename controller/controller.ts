@@ -1,38 +1,20 @@
 import { shuffle } from 'lodash';
 import { toJS } from 'mobx';
 
-import { gameContext } from '../game/game';
+import Game from '../game/game';
 import Strategy from '../strategy/strategy';
 
 const randomMove = Strategy.randomMove;
 
-// setInterval(() => {
-//   [game.white, game.black].forEach((player: Player) =>
-//     player.pieces.forEach(p => {
-//       if (!p.canMove) {
-//         return;
-//       }
-
-//       const move = randomMove(p);
-//       if (move) {
-//         player.move(game.board, p, move);
-//         p.reset();
-//       }
-//     })
-//   );
-
-//   game.white.forward();
-//   game.black.forward();
-//   game.forward();
-// }, 1000);
-
 export default class Controller {
+  gameContext: Game;
+
   get game() {
-    return gameContext;
+    return this.gameContext;
   }
 
   get shuffledMoveablePieces() {
-    return shuffle(gameContext.board.pieces.filter(p => p.canMove));
+    return shuffle(this.gameContext.board.pieces.filter(p => p.canMove));
   }
 
   loop() {
@@ -49,12 +31,15 @@ export default class Controller {
   moveRandomlyAllMoveablePieces() {
     const { board } = this.game;
     this.shuffledMoveablePieces.forEach(p => {
-      const target = randomMove(p);
-
+      const target = randomMove(board, p);
       if (target) {
         board.move(p, target);
         p.reset();
       }
     });
+  }
+
+  constructor(gameContext: Game) {
+    this.gameContext = gameContext;
   }
 }

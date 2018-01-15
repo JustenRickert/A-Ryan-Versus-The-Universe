@@ -1,11 +1,13 @@
 import { Maybe } from '../util/util';
 import LocalStorage from '../util/localStorage';
 
-import { DEFAULT_PIECES } from '../constant';
-
-import Piece from '../game/piece';
+import Piece, { PShape } from '../game/piece';
 
 import { load } from './userStorage';
+
+const DEFAULT_PIECES: Piece[] = [
+  new PShape({ team: undefined, coordinate: undefined })
+];
 
 export default class User {
   pieces: Piece[];
@@ -16,5 +18,4 @@ export default class User {
 }
 
 const localUserData: Maybe<User> = load();
-
 export const userContext = localUserData || new User();
