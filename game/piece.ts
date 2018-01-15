@@ -23,13 +23,9 @@ export default abstract class Piece {
   @observable c: Coordinate;
   @observable ti: Timeout = 0;
 
-  forward = () => {
-    this.ti <= 0 ? (this.ti = 0) : (this.ti -= 1);
-  };
+  forward = () => (this.ti <= 0 ? (this.ti = 0) : (this.ti -= 1));
 
-  reset = () => {
-    this.ti = this.cd;
-  };
+  reset = () => (this.ti = this.cd);
 
   get canMove() {
     return this.ti <= 0;
