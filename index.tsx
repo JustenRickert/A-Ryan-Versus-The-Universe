@@ -1,35 +1,37 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import * as _ from 'lodash';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-import App from './component/App';
-import Strategy from './strategy/strategy';
-import Player from './game/player';
-import { gameContext } from './game/game';
 import registerServiceWorker from './registerServiceWorker';
 
-const game = gameContext;
-const randomMove = Strategy.randomMove;
+import MenuView from './component/MenuView';
+import PurchaseView from './component/PurchaseView';
+import MatchView from './component/MatchView';
 
-setInterval(() => {
-  [game.white, game.black].forEach((player: Player) =>
-    player.pieces.forEach(p => {
-      if (!p.canMove) {
-        return;
-      }
+import { createGameContext } from './game/game';
+import { gameContext } from './state/game';
+import { userContext } from './state/user';
 
-      const move = randomMove(p);
-      if (move) {
-        player.move(game.board, p, move);
-        p.reset();
-      }
-    })
-  );
+import { Style } from './component/style';
 
-  game.white.forward();
-  game.black.forward();
-  game.forward();
-}, 1000);
+const user = userContext;
 
-ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);
+ReactDOM.render(
+  <Router>
+    <div style={Style}>
+      <Route path="/match">
+        <MatchView game={gameContext} />
+      </Route>
+
+      <Route path="/purchase">
+        <PurchaseView user={userContext} />
+      </Route>
+
+      <Route path="/">
+        <MenuView user={userContext} />
+      </Route>
+    </div>
+  </Router>,
+  document.getElementById('root') as HTMLElement
+);
 registerServiceWorker();
