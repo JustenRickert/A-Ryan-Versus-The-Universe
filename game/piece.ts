@@ -48,7 +48,7 @@ export default abstract class Piece {
   get coordinateString() {
     return this.c
       ? `${this.symbol}{${this.c.x},${this.c.y}}`
-      : `${this.symbol} has no coordinate`;
+      : `${this.symbol}`;
   }
 
   constructor(symbol: string) {

@@ -56,16 +56,14 @@ class MatchView extends React.Component<P, S> {
   }
 
   render() {
-    if (this.props.game) {
+    if (this.props.game)
       return (
         <Main>
           <Logger game={this.props.game} />
           <BoardView game={this.props.game} />
         </Main>
       );
-    } else {
-      return <Main>{`There is no game context`}</Main>;
-    }
+    else return <Main>{`Game not initialized.`}</Main>;
   }
 }
 

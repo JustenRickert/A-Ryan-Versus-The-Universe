@@ -40,28 +40,3 @@ export const Main: React.SFC<{ time?: Time }> = props => {
 /**
  * APP VIEW
  */
-
-// @observer
-// export default class App extends React.Component<{}, {}> {
-//   @computed
-//   get gameContext() {
-//     return gameContext;
-//   }
-
-//   render() {
-//     return <div className="App">{this.renderBoardLines()}</div>;
-//   }
-
-//   private renderBoardLines() {
-//     const { boardSize, board } = gameContext;
-
-//     const places: Maybe<Piece>[] = new Array(boardSize.x * boardSize.y).fill(
-//       undefined
-//     );
-//     board.placeMap.forEach((p, index) => {
-//       if (p instanceof Piece) places[index] = p;
-//     });
-
-//     return <Main>{this.props.children}</Main>;
-//   }
-// }

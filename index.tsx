@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import registerServiceWorker from './registerServiceWorker';
 
-import { MenuView } from './component/App';
+import MenuView from './component/MenuView';
 import PurchaseView from './component/PurchaseView';
 import MatchView from './component/MatchView';
 
@@ -28,7 +28,7 @@ ReactDOM.render(
       </Route>
 
       <Route path="/">
-        <MenuView />
+        <MenuView user={userContext} />
       </Route>
     </div>
   </Router>,
