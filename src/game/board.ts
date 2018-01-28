@@ -1,9 +1,9 @@
-import { observable, computed, toJS } from 'mobx';
+import { observable } from 'mobx';
 
 import { boardConf } from '../constant';
 import Coordinate from './coordinate';
-import Piece, { MShape } from './piece';
-import Player, { Team } from './player';
+import Piece from './piece';
+import Player from './player';
 
 const toNumber = Coordinate.toNumber;
 const equal = Coordinate.equal;

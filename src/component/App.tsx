@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { computed, toJS } from 'mobx';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { boardConf } from '../constant';
-import Coordinate from '../game/coordinate';
-import Game, { gameContext } from '../game/game';
+// import { boardConf } from '../constant';
+// import Coordinate from '../game/coordinate';
+import  { gameContext } from '../game/game';
 import Piece from '../game/piece';
 
 import Logger from './Logger';

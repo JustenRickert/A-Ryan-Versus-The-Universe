@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { computed } from 'mobx';
+// import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 
 import Player from '../game/player';

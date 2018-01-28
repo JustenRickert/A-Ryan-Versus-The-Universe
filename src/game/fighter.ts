@@ -13,7 +13,7 @@ abstract class Fighter extends Piece {
   attackables = (b: Board) => this.moves(b).filter(c => b.at(c) && b.at(c));
 }
 
-class MFighter extends Fighter {
+export class MFighter extends Fighter {
   cd = 4;
   team: Team;
 
