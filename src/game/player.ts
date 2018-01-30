@@ -2,7 +2,6 @@ import { action, observable } from 'mobx';
 
 import Board from './board';
 import Coordinate from './coordinate';
-import Placement from './board';
 import Piece from './piece';
 
 const toNumber = Coordinate.toNumber;

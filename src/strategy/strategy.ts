@@ -1,7 +1,6 @@
 import { sample } from 'lodash';
 
 import { gameContext } from '../game/game';
-import Coordinate from '../game/coordinate';
 import Piece from '../game/piece';
 
 const board = gameContext.board;

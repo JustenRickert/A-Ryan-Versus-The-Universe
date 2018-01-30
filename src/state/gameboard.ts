@@ -1,6 +1,3 @@
-import { sample } from 'lodash';
-import { observable } from 'mobx';
-
 export const BOARD_SIZE = 10;
 
 enum Direction {

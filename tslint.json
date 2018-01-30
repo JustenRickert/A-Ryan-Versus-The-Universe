@@ -1,5 +1,6 @@
 {
     "extends": ["tslint-react"],
+    "defaultSeverity": "warning",
     "rules": {
         "align": [
             true,
@@ -13,7 +14,7 @@
             true,
             "check-space"
         ],
-        "curly": true,
+        "curly": false,
         "eofline": false,
         "forin": true,
         "indent": [ true, "spaces" ],
@@ -63,7 +64,7 @@
         ],
         "quotemark": [true, "single", "jsx-double"],
         "radix": true,
-        "semicolon": [true, "always"],
+        "semicolon": [false, "always"],
         "switch-default": true,
 
         "trailing-comma": [false],
