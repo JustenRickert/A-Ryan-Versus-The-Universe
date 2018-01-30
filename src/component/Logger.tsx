@@ -1,19 +1,19 @@
-import * as React from 'react';
+import * as React from 'react'
 // import { computed } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react'
 
-import Player from '../game/player';
-import Game from '../game/game';
+import Player from '../game/player'
+import Game from '../game/game'
 
-import { ListView, KeyValueView } from './Parts';
+import { ListView, KeyValueView } from './Parts'
 
-import { LoggerStyle } from './style';
+import { LoggerStyle } from './style'
 
 const CoordinatesAndTimes: React.SFC<{
-  white: Player;
-  black: Player;
+  white: Player
+  black: Player
 }> = props => {
-  const { white, black } = props;
+  const { white, black } = props
   return (
     <React.Fragment>
       {[white, black].map((player, playerIndex) => (
@@ -27,23 +27,23 @@ const CoordinatesAndTimes: React.SFC<{
         </ListView>
       ))}
     </React.Fragment>
-  );
-};
+  )
+}
 
 interface P {
-  game: Game;
+  game: Game
 }
 
 @observer
 export default class Logger extends React.Component<P, {}> {
   render() {
-    const { game } = this.props;
-    const { time, white, black } = game;
+    const { game } = this.props
+    const { time, white, black } = game
     return (
       <div style={LoggerStyle}>
         {`Total Time: ${time}`}
         <CoordinatesAndTimes white={white} black={black} />
       </div>
-    );
+    )
   }
 }
