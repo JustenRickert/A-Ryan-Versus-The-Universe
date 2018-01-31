@@ -1,14 +1,14 @@
 import { sample } from 'lodash'
 
-import { gameContext } from '../game/game'
+import Game from '../game/game'
 import Piece from '../game/piece'
 
-const board = gameContext.board
+export default class Strategy {
+  game: Game
 
-class Strategy {
-  randomMove = (p: Piece) => sample(p.emptyMoves(board))
+  constructor(game: Game) {
+    this.game = game
+  }
+
+  randomMove = (p: Piece) => sample(p.emptyMoves(this.game.board))
 }
-
-const strategy = new Strategy()
-
-export default strategy

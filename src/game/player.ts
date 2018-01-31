@@ -8,7 +8,8 @@ const toNumber = Coordinate.toNumber
 
 export enum Team {
   White = 'white',
-  Black = 'black'
+  Black = 'black',
+  None = 'none'
 }
 
 export default class Player {

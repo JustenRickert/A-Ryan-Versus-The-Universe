@@ -1,10 +1,8 @@
 import * as React from 'react'
-import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 
 // import { boardConf } from '../constant';
 // import Coordinate from '../game/coordinate';
-import { gameContext } from '../game/game'
 import Piece from '../game/piece'
 
 import Logger from './Logger'
@@ -17,6 +15,7 @@ import {
   SquareStyle
 } from './style'
 import './App.css'
+import GameContext from '../game/game'
 
 type None = undefined
 type Maybe<T> = T | None
@@ -56,14 +55,17 @@ const Main: React.SFC<{}> = props => {
 }
 
 /**
- * APP VIEW
+ * MATCH VIEW
  */
 
+interface MatchProps {
+  gameContext: GameContext
+}
+
 @observer
-export default class App extends React.Component<{}, {}> {
-  @computed
-  get gameContext() {
-    return gameContext
+export default class MatchView extends React.Component<MatchProps, {}> {
+  constructor(props: MatchProps) {
+    super(props)
   }
 
   render() {
@@ -71,7 +73,7 @@ export default class App extends React.Component<{}, {}> {
   }
 
   private renderBoardLines() {
-    const { boardSize, board } = gameContext
+    const { boardSize, board } = this.props.gameContext
 
     const places: Maybe<Piece>[] = new Array(boardSize.x * boardSize.y).fill(
       undefined
@@ -82,7 +84,7 @@ export default class App extends React.Component<{}, {}> {
 
     return (
       <Main>
-        <Logger game={this.gameContext} />
+        <Logger game={this.props.gameContext} />
         <Board places={places} />
       </Main>
     )
