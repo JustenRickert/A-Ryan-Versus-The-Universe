@@ -1,5 +1,7 @@
 import { action, observable } from 'mobx'
+import { sample } from 'lodash'
 
+import User from '../user/user'
 import Board from './board'
 import Coordinate from './coordinate'
 import Piece from './piece'
@@ -17,6 +19,7 @@ export default class Player {
   team: Team
   @observable pieces: Piece[]
   @observable placements: Map<number, Piece>
+  placementsNotMade: Piece[]
 
   get allCanMove() {
     return this.pieces.filter(p => p.canMove)
@@ -24,14 +27,12 @@ export default class Player {
 
   constructor(team: Team, pieces: Piece[]) {
     this.title = team === Team.White ? 'White' : 'Black'
-
     this.team = team
-
     this.pieces = pieces
-
     this.placements = new Map()
     for (const p of pieces) {
-      this.placements.set(toNumber(p.c), p)
+      if (p.c) this.placements.set(toNumber(p.c), p)
+      else this.placementsNotMade.push(p)
     }
   }
 
@@ -47,9 +48,20 @@ export default class Player {
 
     const targetC = board.placeMap.get(toNumber(target))
     if (targetC) board.placeMap.delete(toNumber(target))
-    board.placeMap.delete(toNumber(piece.c))
+    if (piece.c) {
+      board.placeMap.delete(toNumber(piece.c))
+    } else {
+      throw new Error(`Can't place piece without coordinate!`)
+    }
 
     piece.c = new Coordinate(target)
     board.placeMap.set(toNumber(target), piece)
   }
+}
+
+export const createFromUserObject = (user: User, team?: Team) => {
+  return new Player(
+    team || sample([Team.White, Team.Black])!,
+    user.piecesPlaced
+  )
 }

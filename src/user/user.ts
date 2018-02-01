@@ -1,14 +1,15 @@
 import Piece, { PShape, MShape } from '../game/piece'
 
-const STARTING_PIECES = [new PShape(), new MShape(), new PShape()]
+export const STARTING_PIECES = [new PShape(), new MShape(), new PShape()]
 
-class User {
+export default class User {
   pieces: Piece[]
-  placements: Map<Piece>
+
+  get piecesPlaced() {
+    return this.pieces.filter(p => p.c)
+  }
+
   constructor(pieces: Piece[]) {
     this.pieces = pieces
   }
 }
-
-const user = new User(STARTING_PIECES)
-export default user

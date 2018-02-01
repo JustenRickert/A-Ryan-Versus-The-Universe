@@ -3,13 +3,18 @@ import * as ReactDOM from 'react-dom'
 
 import MatchView from './component/App'
 import Strategy from './strategy/strategy'
-import Player from './game/player'
+import Player, { createFromUserObject } from './game/player'
 import Board from './game/board'
+import User, { STARTING_PIECES } from './user/user'
 import GameContext from './game/game'
+
 import registerServiceWorker from './registerServiceWorker'
 
-const user = new User()
-const game = new GameContext()
+const user = new User(STARTING_PIECES)
+const player = createFromUserObject(user)
+const enemy = createFromUserObject(user)
+const board = new Board(player, enemy)
+const game = new GameContext(board, player, enemy)
 const strategy = new Strategy(game)
 
 setInterval(() => {

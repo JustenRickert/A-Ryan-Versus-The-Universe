@@ -4,16 +4,16 @@ import { boardConf } from '../constant'
 import Coordinate from './coordinate'
 import Piece from './piece'
 import Player from './player'
+import { Maybe } from '../util/type'
 
 const toNumber = Coordinate.toNumber
 const equal = Coordinate.equal
-type Maybe<T> = T | undefined
 
 export type Placement = { piece: Piece; c: Coordinate }
 
 export default class Board {
-  @observable white: Player
-  @observable black: Player
+  @observable player: Player
+  @observable enemy: Player
 
   /**
    * Placemap is how the board gets updated. It's an observable with a
@@ -21,34 +21,47 @@ export default class Board {
    */
   @observable placeMap: Map<number, Maybe<Piece>>
   get pieces() {
-    return [...this.white.pieces, ...this.black.pieces]
+    return [...this.player.pieces, ...this.enemy.pieces]
+  }
+
+  get placementsNotMade() {
+    return this.pieces.filter(p => !p.c)
+  }
+
+  get placementsMade() {
+    return this.pieces.filter(p => p.c)
   }
 
   private size: { x: number; y: number }
 
   constructor(white: Player, black: Player) {
     this.size = boardConf
-    this.white = white
-    this.black = black
+    this.player = white
+    this.enemy = black
 
     /*
-     * Error check.
+     * Error check for a placement made twice.
      */
-    this.pieces.forEach((p, i) => {
-      for (const op of this.pieces.slice(i + 1, this.pieces.length)) {
-        if (equal(p.c, op.c))
-          throw new Error(`Cannot make two placements in the same place!
-p:  x: ${p.c.x}, y: ${p.c.y}
-op: x: ${op.c.x}, y: ${op.c.y}
+    this.placementsMade.forEach((p, i) => {
+      for (const op of this.placementsMade.slice(
+        i + 1,
+        this.placementsMade.length
+      )) {
+        if (equal(p.c!, op.c!))
+          throw new Error(`
+Cannot make two placements in the same place!
+p:  x: ${p.c!.x}, y: ${p.c!.y}
+op: x: ${op.c!.x}, y: ${op.c!.y}
 `)
         if (
-          p.c.x < 0 ||
-          p.c.y < 0 ||
-          p.c.x >= this.size.x ||
-          p.c.y >= this.size.y
+          p.c!.x < 0 ||
+          p.c!.y < 0 ||
+          p.c!.x >= this.size.x ||
+          p.c!.y >= this.size.y
         )
-          throw new Error(`Cannot place outside of the board!
-x: ${p.c.x}, y: ${p.c.y}
+          throw new Error(`
+Cannot place outside of the board!
+x: ${p.c!.x}, y: ${p.c!.y}
 max: ${this.size.x}, ${this.size.y}
 `)
       }
@@ -63,8 +76,8 @@ max: ${this.size.x}, ${this.size.y}
      * `...`, `{x: board length -1, y: board height - 1}`.
      */
     this.placeMap = new Map<number, Piece>()
-    for (const p of this.pieces) {
-      this.placeMap.set(toNumber(p.c), p)
+    for (const p of this.placementsMade) {
+      this.placeMap.set(toNumber(p.c!), p)
     }
   }
 
@@ -76,9 +89,9 @@ max: ${this.size.x}, ${this.size.y}
   outbounds = (c: Coordinate): boolean => !this.inbounds(c)
 
   forward = () => {
-    this.white.forward()
-    this.black.forward()
+    this.player.forward()
+    this.enemy.forward()
   }
 
-  movablePieces = () => [...this.white.allCanMove, ...this.black.allCanMove]
+  movablePieces = () => [...this.player.allCanMove, ...this.enemy.allCanMove]
 }

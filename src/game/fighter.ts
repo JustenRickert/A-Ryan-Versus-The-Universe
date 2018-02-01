@@ -24,13 +24,18 @@ export class MFighter extends Fighter {
   }
 
   moves = (b: Board): Coordinate[] => {
+    if (!this.c) {
+      throw new Error(
+        `Piece ${this} can't move if it doesn't have a coordinate.`
+      )
+    }
     const coords = [
       { x: 1, y: 0 }, // Right
       { x: -1, y: 0 }, // Left
       { x: 0, y: 1 }, // Down
       { x: 0, y: -1 } // Up
     ]
-      .map(c => sum(this.c, c))
+      .map(c => sum(this.c!, c))
       .filter(c => !b.at(c) && b.inbounds(c))
     return coords
   }
