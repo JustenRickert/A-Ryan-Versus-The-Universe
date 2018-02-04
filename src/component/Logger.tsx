@@ -15,9 +15,9 @@ const CoordinatesAndTimes: React.SFC<{
   const { player, enemy } = props
   return (
     <React.Fragment>
-      {[player, enemy].map((player, playerIndex) => (
-        <ListView key={playerIndex} title={player.title}>
-          {player.pieces.map((p, pieceIndex) => (
+      {[player, enemy].map((pl, playerIndex) => (
+        <ListView key={playerIndex} title={pl.title}>
+          {pl.pieces.map((p, pieceIndex) => (
             <KeyValueView
               key={pieceIndex}
               value={`${p.coordinateString},${p.ti}`}

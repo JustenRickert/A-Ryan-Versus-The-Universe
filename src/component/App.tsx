@@ -59,7 +59,7 @@ const Main: React.SFC<{}> = props => {
  */
 
 interface MatchProps {
-  gameContext: GameContext
+  game: GameContext
 }
 
 @observer
@@ -73,7 +73,7 @@ export default class MatchView extends React.Component<MatchProps, {}> {
   }
 
   private renderBoardLines() {
-    const { boardSize, board } = this.props.gameContext
+    const { boardSize, board } = this.props.game
 
     const places: Maybe<Piece>[] = new Array(boardSize.x * boardSize.y).fill(
       undefined
@@ -84,7 +84,7 @@ export default class MatchView extends React.Component<MatchProps, {}> {
 
     return (
       <Main>
-        <Logger game={this.props.gameContext} />
+        <Logger game={this.props.game} />
         <Board places={places} />
       </Main>
     )

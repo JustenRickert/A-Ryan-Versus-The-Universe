@@ -3,39 +3,45 @@ import * as ReactDOM from 'react-dom'
 
 import MatchView from './component/App'
 import Strategy from './strategy/strategy'
-import Player, { createFromUserObject } from './game/player'
+import Player, {
+  Team,
+  createFromUserObject as createPlayer
+} from './game/player'
 import Board from './game/board'
 import User, { STARTING_PIECES } from './user/user'
 import GameContext from './game/game'
 
 import registerServiceWorker from './registerServiceWorker'
 
-const user = new User(STARTING_PIECES)
-const player = createFromUserObject(user)
-const enemy = createFromUserObject(user)
-const board = new Board(player, enemy)
-const game = new GameContext(board, player, enemy)
-const strategy = new Strategy(game)
+// prettier-ignore
+const user     = new User(STARTING_PIECES),
+      player   = createPlayer(user, Team.White),
+      enemy    = createPlayer(user, Team.Black),
+      board    = new Board(player, enemy),
+      game     = new GameContext(board, player, enemy),
+      strategy = new Strategy(game)
 
 setInterval(() => {
-  ;[game.white, game.black].forEach((player: Player) =>
-    player.pieces.forEach(p => {
+  ;[game.player, game.enemy].forEach((pl: Player) =>
+    pl.pieces.forEach(p => {
       if (!p.canMove) {
         return
       }
 
-      const move = randomMove(p)
+      const move = strategy.randomMove(p)
       if (move) {
-        player.move(game.board, p, move)
+        pl.move(game.board, p, move)
         p.reset()
       }
     })
   )
 
-  game.white.forward()
-  game.black.forward()
+  game.player.forward()
+  game.enemy.forward()
   game.forward()
 }, 1000)
 
-ReactDOM.render(<MatchView />, document.getElementById('root') as HTMLElement)
+ReactDOM.render(<MatchView game={game} />, document.getElementById(
+  'root'
+) as HTMLElement)
 registerServiceWorker()
