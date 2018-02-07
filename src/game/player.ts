@@ -30,7 +30,7 @@ export default class Player {
     this.team = team
     this.pieces = pieces
     this.placements = new Map()
-    for (const p of pieces) {
+    for (const p of this.pieces) {
       if (p.c) this.placements.set(toNumber(p.c), p)
       else this.placementsNotMade.push(p)
     }
@@ -60,8 +60,14 @@ export default class Player {
 }
 
 export const createFromUserObject = (user: User, team?: Team) => {
+  console.log('user pieces', user.pieces)
   return new Player(
     team || sample([Team.White, Team.Black])!,
     user.piecesPlaced
   )
+}
+
+export const createEnemy = (pieces: Piece[], team?: Team) => {
+  console.log('enemy pieces', pieces)
+  return new Player(team || sample([Team.White, Team.Black])!, pieces)
 }

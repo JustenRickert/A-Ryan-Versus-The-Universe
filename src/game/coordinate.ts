@@ -28,7 +28,7 @@ export default class Coordinate {
     })
   }
 
-  constructor({ x, y }: { x: number; y: number } | Coordinate) {
+  constructor({ x, y }: Coordinate) {
     this.x = x
     this.y = y
   }

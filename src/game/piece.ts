@@ -1,13 +1,12 @@
 import Coordinate from './coordinate'
 import Board from './board'
 import { Team } from './player'
+import { Maybe } from '../util/type'
 
 type Symbol = string
 type Number = number
 type Timeout = Number
 type Cooldown = number
-
-type Maybe<T> = T | undefined
 
 const sum = (a: Coordinate, b: Coordinate) => Coordinate.plus(a, b)
 

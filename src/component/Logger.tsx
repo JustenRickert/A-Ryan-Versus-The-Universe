@@ -15,11 +15,11 @@ const CoordinatesAndTimes: React.SFC<{
   const { player, enemy } = props
   return (
     <React.Fragment>
-      {[player, enemy].map((pl, playerIndex) => (
-        <ListView key={playerIndex} title={pl.title}>
-          {pl.pieces.map((p, pieceIndex) => (
+      {[player, enemy].map((pl, plIndex) => (
+        <ListView key={plIndex} title={pl.title}>
+          {pl.pieces.map((p, pIndex) => (
             <KeyValueView
-              key={pieceIndex}
+              key={pIndex}
               value={`${p.coordinateString},${p.ti}`}
             />
           ))}

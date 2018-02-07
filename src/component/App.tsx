@@ -68,8 +68,29 @@ export default class MatchView extends React.Component<MatchProps, {}> {
     super(props)
   }
 
+  get game() {
+    return this.props.game
+  }
+
+  get board() {
+    if (this.game.isInitialized) return this.game.board!
+    else throw new Error(`This error shouldn't ever be read`)
+  }
+
   render() {
-    return <div className="App">{this.renderBoardLines()}</div>
+    // if (!this.props.game.board.isInitializedForGame)
+    //   throw new Error(`Cannot render an uninitialized board`)
+    return (
+      <div className="App">
+        {this.game.isInitialized
+          ? this.renderBoardLines()
+          : this.renderSorryNoGame()}
+      </div>
+    )
+  }
+
+  private renderSorryNoGame() {
+    return <div>{`Sorry but the game isn't initialized`}</div>
   }
 
   private renderBoardLines() {

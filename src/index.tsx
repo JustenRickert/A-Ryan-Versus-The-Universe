@@ -5,7 +5,8 @@ import MatchView from './component/App'
 import Strategy from './strategy/strategy'
 import Player, {
   Team,
-  createFromUserObject as createPlayer
+  createFromUserObject as createPlayer,
+  createEnemy
 } from './game/player'
 import Board from './game/board'
 import User, { STARTING_PIECES } from './user/user'
@@ -13,13 +14,13 @@ import GameContext from './game/game'
 
 import registerServiceWorker from './registerServiceWorker'
 
-// prettier-ignore
-const user     = new User(STARTING_PIECES),
-      player   = createPlayer(user, Team.White),
-      enemy    = createPlayer(user, Team.Black),
-      board    = new Board(player, enemy),
-      game     = new GameContext(board, player, enemy),
-      strategy = new Strategy(game)
+const user = new User(STARTING_PIECES)
+const player = createPlayer(user, Team.White)
+const enemy = createEnemy(STARTING_PIECES, Team.Black)
+const game = new GameContext(board, player, enemy)
+const strategy = new Strategy(game)
+
+strategy.randomPossiblePlacements(Team.White)
 
 setInterval(() => {
   ;[game.player, game.enemy].forEach((pl: Player) =>
