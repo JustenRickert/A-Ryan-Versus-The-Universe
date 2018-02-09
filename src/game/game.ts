@@ -1,6 +1,5 @@
 import { action, observable } from 'mobx'
 
-import Player from './player'
 import Board from './board'
 
 import { Maybe } from '../util/type'
@@ -10,14 +9,25 @@ export default class Game {
   board: Maybe<Board>
 
   @observable time: number
-  @observable player: Player
-  @observable enemy: Player
   @observable isInitialized: boolean
 
-  constructor(p: Player, e: Player) {
-    this.player = p
-    this.enemy = e
+  get player() {
+    if (!this.board) {
+      throw new Error('Need to initialize the board with a player.')
+    }
+    return this.board.player
+  }
+
+  get enemy() {
+    if (!this.board) {
+      throw new Error('Need to initialize the board with a player.')
+    }
+    return this.player
+  }
+
+  constructor() {
     this.time = 0
+    this.isInitialized = false
   }
 
   @action
@@ -26,5 +36,8 @@ export default class Game {
     this.isInitialized = true
   }
 
-  forward = () => this.time++
+  forward = () => {
+    this.time++
+    ;[this.player, this.enemy].forEach(p => p.forward())
+  }
 }

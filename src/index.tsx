@@ -10,14 +10,14 @@ import Player, {
 } from './game/player'
 import Board from './game/board'
 import User, { STARTING_PIECES } from './user/user'
-import GameContext from './game/game'
+import Game from './game/game'
 
 import registerServiceWorker from './registerServiceWorker'
 
 const user = new User(STARTING_PIECES)
 const player = createPlayer(user, Team.White)
 const enemy = createEnemy(STARTING_PIECES, Team.Black)
-const game = new GameContext(board, player, enemy)
+const game = new Game()
 const strategy = new Strategy(game)
 
 strategy.randomPossiblePlacements(Team.White)

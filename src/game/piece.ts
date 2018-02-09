@@ -11,9 +11,8 @@ type Cooldown = number
 const sum = (a: Coordinate, b: Coordinate) => Coordinate.plus(a, b)
 
 export default abstract class Piece {
-  abstract moves: (b: Board) => Coordinate[]
   abstract team: Team
-
+  abstract hitpoints: number
   readonly symbol: Symbol
   readonly cd: Cooldown
 
@@ -46,6 +45,7 @@ export default abstract class Piece {
     this.c = c || undefined
   }
 
+  abstract moves: (b: Board) => Coordinate[]
   emptyMoves = (b: Board) => this.moves(b).filter(c => !b.at(c))
 }
 

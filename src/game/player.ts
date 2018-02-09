@@ -19,7 +19,10 @@ export default class Player {
   team: Team
   @observable pieces: Piece[]
   @observable placements: Map<number, Piece>
-  placementsNotMade: Piece[]
+
+  get piecesNotPlaced() {
+    return this.pieces.filter(p => p)
+  }
 
   get allCanMove() {
     return this.pieces.filter(p => p.canMove)
@@ -30,9 +33,9 @@ export default class Player {
     this.team = team
     this.pieces = pieces
     this.placements = new Map()
+    console.log(this.piecesNotPlaced)
     for (const p of this.pieces) {
       if (p.c) this.placements.set(toNumber(p.c), p)
-      else this.placementsNotMade.push(p)
     }
   }
 

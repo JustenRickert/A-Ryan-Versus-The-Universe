@@ -77,6 +77,10 @@ export default class MatchView extends React.Component<MatchProps, {}> {
     else throw new Error(`This error shouldn't ever be read`)
   }
 
+  get boardSize() {
+    return this.props.game.boardSize
+  }
+
   render() {
     // if (!this.props.game.board.isInitializedForGame)
     //   throw new Error(`Cannot render an uninitialized board`)
@@ -94,12 +98,11 @@ export default class MatchView extends React.Component<MatchProps, {}> {
   }
 
   private renderBoardLines() {
-    const { boardSize, board } = this.props.game
+    const places: Maybe<Piece>[] = new Array(
+      this.boardSize.x * this.boardSize.y
+    ).fill(undefined)
 
-    const places: Maybe<Piece>[] = new Array(boardSize.x * boardSize.y).fill(
-      undefined
-    )
-    board.placeMap.forEach((p, index) => {
+    this.board.placeMap.forEach((p, index) => {
       if (p instanceof Piece) places[index] = p
     })
 

@@ -28,6 +28,17 @@ export default class Coordinate {
     })
   }
 
+  static norm(rank: 1 | 2) {
+    return (c1: Coordinate, c2: Coordinate) => {
+      switch (rank) {
+        case 1:
+          return Math.abs(c2.y - c1.y) + Math.abs(c2.x - c1.x)
+        case 2:
+          return Math.sqrt(c2.y - c1.y) + Math.sqrt(c2.x - c1.x)
+      }
+    }
+  }
+
   constructor({ x, y }: Coordinate) {
     this.x = x
     this.y = y
