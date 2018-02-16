@@ -20,7 +20,7 @@ const CoordinatesAndTimes: React.SFC<{
           {pl.pieces.map((p, pIndex) => (
             <KeyValueView
               key={pIndex}
-              value={`${p.coordinateString},${p.ti}`}
+              value={`${p.coordinateString},${p.cd}`}
             />
           ))}
         </ListView>

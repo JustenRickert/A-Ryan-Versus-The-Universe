@@ -8,27 +8,74 @@ type Number = number
 type Timeout = Number
 type Cooldown = number
 
-const sum = (a: Coordinate, b: Coordinate) => Coordinate.plus(a, b)
+// prettier-ignore
+export enum DecisionKind {
+  Movement = 'movement',
+  Attack   = 'attack',
+  Nothing  = 'nothing'
+}
+
+export interface DecisionArgs {
+  self: Piece
+  kind: DecisionKind
+  c: Maybe<Coordinate>
+  op?: Piece
+}
+
+export class Decision {
+  self: Piece
+  kind: DecisionKind
+  c: Maybe<Coordinate>
+  op?: Piece
+  private deferred: Function[] = []
+
+  constructor(args: DecisionArgs) {
+    const { self, kind, c, op } = args
+    if (DecisionKind.Attack === kind) this.checkAttackDecisionKind(self, op)
+    if (DecisionKind.Movement === kind) this.checkMovementDecisionKind(c)
+
+    this.kind = kind
+    this.c = c
+    this.op = op
+
+    this.deferred.forEach(f => f())
+  }
+
+  private checkMovementDecisionKind = (c: Maybe<Coordinate>) => {
+    if (!c) {
+      this.deferred.push(() => (this.kind = DecisionKind.Nothing))
+    }
+  }
+
+  private checkAttackDecisionKind = (self: Piece, op: Maybe<Piece>) => {
+    if (!op || self.team === op.team) {
+      throw new Error(`
+Attack Decision constructor must have an argument for an opposing piece
+`)
+    }
+  }
+}
 
 export default abstract class Piece {
   abstract team: Team
   abstract hitpoints: number
   readonly symbol: Symbol
-  readonly cd: Cooldown
+  readonly timeout: Timeout
 
   c: Maybe<Coordinate>
-  ti: Timeout = 0
+  cd: Cooldown = 0
+  decision: Decision
 
   forward = () => {
-    this.ti <= 0 ? (this.ti = 0) : (this.ti -= 1)
+    this.cd <= 0 ? (this.cd = 0) : (this.cd -= 1)
   }
 
   reset = () => {
-    this.ti = this.cd
+    this.cd = this.timeout
   }
 
   get canMove() {
-    return this.ti <= 0
+    return this.cd <= 0
   }
 
   get coordinateString() {
@@ -45,64 +92,15 @@ export default abstract class Piece {
     this.c = c || undefined
   }
 
+  /**
+     Deciding a move means to intend to move to a given location. The actual
+     movement won't be done until the end of the frame. This is useful when
+     there are impossible movements like two allied pieces moving to the same
+     location, then not making the move already means there's time for
+     additional logic to happen before the end of the frame.
+   */
+  decideMove = (args: DecisionArgs) => (this.decision = new Decision(args))
+
   abstract moves: (b: Board) => Coordinate[]
   emptyMoves = (b: Board) => this.moves(b).filter(c => !b.at(c))
-}
-
-export class MShape extends Piece {
-  c: Maybe<Coordinate>
-  cd = 3
-  team: Team
-
-  constructor(coordinate?: Coordinate, team?: Team) {
-    super('m')
-    this.team = team || Team.None
-    this.c = coordinate || undefined
-  }
-
-  moves = (b: Board): Coordinate[] => {
-    if (!this.c) {
-      throw new Error(
-        `Piece ${this} can't move if it doesn't have a coordinate.`
-      )
-    }
-    const coords = [
-      { x: 1, y: 0 }, // Right
-      { x: -1, y: 0 }, // Left
-      { x: 0, y: 1 }, // Down
-      { x: 0, y: -1 } // Up
-    ]
-      .map(c => sum(this.c!, c))
-      .filter(c => b.inbounds(c))
-    return coords
-  }
-}
-
-export class PShape extends Piece {
-  c: Maybe<Coordinate>
-  cd = 4
-  team: Team
-
-  constructor(coordinate?: Coordinate, team?: Team) {
-    super('p')
-    this.team = team || Team.None
-    this.c = coordinate
-  }
-
-  moves = (b: Board): Coordinate[] => {
-    if (!this.c) {
-      throw new Error(
-        `Piece ${this} can't move if it doesn't have a coordinate.`
-      )
-    }
-    const coords = [
-      { x: 1, y: 1 }, // Right-Down
-      { x: -1, y: -1 }, // Left-Up
-      { x: -1, y: 1 }, // Left-Down
-      { x: 1, y: -1 } // Right-Up
-    ]
-      .map(c => sum(this.c!, c))
-      .filter(c => !b.at(c) && b.inbounds(c))
-    return coords
-  }
 }
