@@ -1,5 +1,7 @@
 import { sample } from 'lodash'
 
+import { Maybe } from '../util/type'
+
 import Board from './board'
 import Coordinate from './coordinate'
 import Piece, { Decision, DecisionKind, DecisionArgs } from './piece'
@@ -20,13 +22,13 @@ abstract class Fighter extends Piece {
 
 export class MFighter extends Fighter {
   timeout = 4
-  team: Team
-  board: Board
   behavior: Behavior
   hitpoints = 10
   damage: Damage
+  team: Maybe<Team>
+  board: Maybe<Board>
 
-  constructor(board: Board, team: Team, c: Coordinate) {
+  constructor(board?: Board, team?: Team, c?: Coordinate) {
     super('M')
     this.board = board
     this.team = team
@@ -38,6 +40,8 @@ export class MFighter extends Fighter {
      Sets the piece decision
   */
   behave() {
+    if (!this.board)
+      throw new Error('Cannot behave if the board is not initialized')
     this.behavior.action<WanderRandomlyArgs>({
       self: this,
       kind: this.behavior.decisionKind,
@@ -67,22 +71,24 @@ export class MFighter extends Fighter {
 
 abstract class Behavior {
   abstract decisionKind: DecisionKind
-  abstract condition: <C>(context: C & DecisionArgs) => boolean
-  abstract consequence: <C>(context: C & DecisionArgs) => Decision
+  abstract condition: <C extends DecisionArgs>(context: C) => boolean
+  abstract consequence: <C extends DecisionArgs>(context: C) => Decision
 
-  action = <C>(context: C & DecisionArgs) =>
+  action = <C extends DecisionArgs>(context: C) =>
     this.condition(context)
       ? this.consequence(context)
       : new Decision(Object.assign(context, DecisionKind.Nothing))
 }
 
-export type WanderRandomlyArgs = { b: Board }
+export interface WanderRandomlyArgs extends DecisionArgs {
+  b: Board
+}
 
 class WanderRandomly extends Behavior {
   decisionKind = DecisionKind.Movement
   condition = () => true
   // prettier-ignore
-  consequence = <C>(ctx: C & WanderRandomlyArgs & DecisionArgs) => ctx.self.decideMove(
+  consequence = <C>(ctx: C & WanderRandomlyArgs) => ctx.self.decideMove(
     new Decision(Object.assign(ctx, {
       b:    Board,
       kind: this.decisionKind,

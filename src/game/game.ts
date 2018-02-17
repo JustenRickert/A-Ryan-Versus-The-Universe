@@ -1,43 +1,64 @@
-import { action, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 
 import Board from './board'
+import Player from './player'
 
-import { Maybe } from '../util/type'
+import Strategy from '../strategy/strategy'
+import { Check } from '../util/type'
 
 export default class Game {
   boardSize = { x: 11, y: 11 }
-  board: Maybe<Board>
+  @observable board: Check<Board>
+  strategy: Check<Strategy>
 
   @observable time: number
-  @observable isInitialized: boolean
+  @observable initialized: boolean
 
+  @computed
   get player() {
-    if (!this.board) {
+    if (!this.board.initialized) {
       throw new Error('Need to initialize the board with a player.')
     }
-    return this.board.player
+    return this.board.value.player
   }
 
+  @computed
   get enemy() {
-    if (!this.board) {
+    if (!this.board.initialized) {
       throw new Error('Need to initialize the board with a player.')
     }
-    return this.player
+    return this.board.value.enemy
   }
 
   constructor() {
     this.time = 0
-    this.isInitialized = false
+    this.initialized = false
   }
 
   @action
-  initializeBoard = () => {
-    this.board = new Board(this.player, this.enemy)
-    this.isInitialized = true
+  initializeBoard = (player: Player, enemy: Player) => {
+    this.board = Object.assign(<Check<Board>>{
+      value: new Board(player, enemy),
+      initialized: true
+    })
+
+    this.strategy = Object.assign(<Check<Strategy>>{
+      value: new Strategy(this),
+      initialized: true
+    })
+
+    this.initialized = true
   }
 
   forward = () => {
     this.time++
     ;[this.player, this.enemy].forEach(p => p.forward())
+  }
+
+  @action
+  resetBoard = () => {
+    this.board.initialized = false
+    this.strategy.initialized = false
+    this.initialized = false
   }
 }

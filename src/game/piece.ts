@@ -1,3 +1,5 @@
+import { action, observable } from 'mobx'
+
 import Coordinate from './coordinate'
 import Board from './board'
 import { Team } from './player'
@@ -57,14 +59,21 @@ Attack Decision constructor must have an argument for an opposing piece
 }
 
 export default abstract class Piece {
-  abstract team: Team
+  abstract team?: Team
   abstract hitpoints: number
   readonly symbol: Symbol
   readonly timeout: Timeout
 
-  c: Maybe<Coordinate>
+  @observable c: Maybe<Coordinate>
   cd: Cooldown = 0
   decision: Decision
+
+  // prettier-ignore
+  @action
+  update = (
+    key:   'c'        | 'cd'     | 'decision',
+    value: Coordinate | Cooldown | Decision
+  ) => (this[key] = value)
 
   forward = () => {
     this.cd <= 0 ? (this.cd = 0) : (this.cd -= 1)

@@ -1,7 +1,5 @@
 import { action, observable } from 'mobx'
-import { sample } from 'lodash'
 
-import User from '../user/user'
 import Board from './board'
 import Coordinate from './coordinate'
 import Piece from './piece'
@@ -32,11 +30,6 @@ export default class Player {
     this.title = team === Team.White ? 'White' : 'Black'
     this.team = team
     this.pieces = pieces
-    this.placements = new Map()
-    console.log(this.piecesNotPlaced)
-    for (const p of this.pieces) {
-      if (p.c) this.placements.set(toNumber(p.c), p)
-    }
   }
 
   @action forward = () => this.pieces.forEach(p => p.forward())
@@ -51,26 +44,10 @@ export default class Player {
 
     const targetC = board.placeMap.get(toNumber(target))
     if (targetC) board.placeMap.delete(toNumber(target))
-    if (piece.c) {
-      board.placeMap.delete(toNumber(piece.c))
-    } else {
-      throw new Error(`Can't place piece without coordinate!`)
-    }
+    if (piece.c) board.placeMap.delete(toNumber(piece.c))
+    else throw new Error(`Can't place piece without coordinate!`)
 
     piece.c = new Coordinate(target)
     board.placeMap.set(toNumber(target), piece)
   }
-}
-
-export const createFromUserObject = (user: User, team?: Team) => {
-  console.log('user pieces', user.pieces)
-  return new Player(
-    team || sample([Team.White, Team.Black])!,
-    user.piecesPlaced
-  )
-}
-
-export const createEnemy = (pieces: Piece[], team?: Team) => {
-  console.log('enemy pieces', pieces)
-  return new Player(team || sample([Team.White, Team.Black])!, pieces)
 }

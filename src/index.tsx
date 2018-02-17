@@ -1,46 +1,30 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+import { cloneDeep } from 'lodash'
 
 import MatchView from './component/App'
-import Strategy from './strategy/strategy'
-import Player, {
-  Team,
-  createFromUserObject as createPlayer,
-  createEnemy
-} from './game/player'
-import Board from './game/board'
+import Player, { Team } from './game/player'
 import User, { STARTING_PIECES } from './user/user'
 import Game from './game/game'
 
 import registerServiceWorker from './registerServiceWorker'
 
 const user = new User(STARTING_PIECES)
-const player = createPlayer(user, Team.White)
-const enemy = createEnemy(STARTING_PIECES, Team.Black)
+const player = new Player(Team.White, cloneDeep(user.pieces))
+const enemy = new Player(Team.Black, cloneDeep(STARTING_PIECES))
 const game = new Game()
-const strategy = new Strategy(game)
+game.initializeBoard(player, enemy)
 
-strategy.randomPossiblePlacements(Team.White)
+// setInterval(() => {
+//   game.player.pieces.forEach(p => {
+//     let move = game.strategy.value.randomMove(p)
+//     if (move) {
+//       game.player.move(game.board.value, p, move)
+//     }
+//   })
 
-setInterval(() => {
-  ;[game.player, game.enemy].forEach((pl: Player) =>
-    pl.pieces.forEach(p => {
-      if (!p.canMove) {
-        return
-      }
-
-      const move = strategy.randomMove(p)
-      if (move) {
-        pl.move(game.board, p, move)
-        p.reset()
-      }
-    })
-  )
-
-  game.player.forward()
-  game.enemy.forward()
-  game.forward()
-}, 1000)
+//   game.forward()
+// }, 1000)
 
 ReactDOM.render(<MatchView game={game} />, document.getElementById(
   'root'
