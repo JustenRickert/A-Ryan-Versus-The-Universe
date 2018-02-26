@@ -41,7 +41,7 @@ export const RedSquareStyle = {
   backgroundColor: 'red'
 }
 
-export const SquareStyle = {
+export const WhiteSquareStyle = {
   border: '1px solid black',
   display: 'flex'
 }

@@ -1,4 +1,4 @@
-import { boardConf } from '../constant' // TODO this will be deprectade
+import { boardConf } from '../constant'
 
 export default class Coordinate {
   x: number
@@ -14,6 +14,12 @@ export default class Coordinate {
 
   static toNumber(c: Coordinate): number {
     return boardConf.x * c.y + c.x
+  }
+
+  static toCoordinate(n: number): Coordinate {
+    const y = n % boardConf.x
+    const x = Math.floor(n / boardConf.y)
+    return { x, y }
   }
 
   static diff(c1: Coordinate, c2: Coordinate): Coordinate {

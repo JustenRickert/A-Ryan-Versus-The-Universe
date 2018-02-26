@@ -2,7 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 
 // import { boardConf } from '../constant';
-// import Coordinate from '../game/coordinate';
+import Coordinate from '../game/coordinate'
 import Piece from '../game/piece'
 import Board from '../game/board'
 
@@ -13,7 +13,7 @@ import {
   IconStyle,
   MainStyle,
   RedSquareStyle,
-  SquareStyle
+  WhiteSquareStyle
 } from './style'
 import './App.css'
 import GameContext from '../game/game'
@@ -21,8 +21,14 @@ import GameContext from '../game/game'
 type None = undefined
 type Maybe<T> = T | None
 
+const toCoordinate = Coordinate.toCoordinate
+const toNumber = Coordinate.toNumber
+
+const isRedSquare = (index: Coordinate) =>
+  (index.x % 2 || index.y % 2) && !(index.x % 2 && index.y % 2)
+
 interface PieceProps {
-  index: number
+  cIndex: Coordinate
   piece: Piece | None
 }
 
@@ -30,8 +36,8 @@ const PieceView: React.SFC<PieceProps> = props => {
   return (
     <div
       className="board-piece"
-      style={props.index % 2 === 0 ? SquareStyle : RedSquareStyle}
-      key={props.index}
+      style={isRedSquare(props.cIndex) ? WhiteSquareStyle : RedSquareStyle}
+      key={toNumber(props.cIndex)}
     >
       {props.piece ? (
         <div style={IconStyle}>{props.piece.symbol}</div>
@@ -53,7 +59,9 @@ const BoardView: React.SFC<{ board: Board }> = props => {
 
   return (
     <div style={BoardStyle}>
-      {places.map((piece, i) => <PieceView key={i} index={i} piece={piece} />)}
+      {places.map((piece, i) => (
+        <PieceView key={i} cIndex={toCoordinate(i)} piece={piece} />
+      ))}
     </div>
   )
 }
