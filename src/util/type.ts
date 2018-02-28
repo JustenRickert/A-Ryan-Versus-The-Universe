@@ -3,9 +3,10 @@ import { IObservable } from 'mobx'
 export type Warning<T> = T | Error
 export type Maybe<T> = T | undefined
 
-export class Check<T> {
+export class Checked<T> {
   value: T & IObservable
   initialized: boolean
 
-  static map = (cs: Check<any>[], f: (c: Check<any>) => {}) => cs.map(c => f(c))
+  // static map = <T>(cs: Checked<T>[], f: (c: Checked<T>) => {}) =>
+  //   cs.map<T>(c => f(c))
 }

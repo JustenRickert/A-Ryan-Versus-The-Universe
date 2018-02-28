@@ -11,7 +11,14 @@ type Damage = number
 
 const sum = (a: Coordinate, b: Coordinate) => Coordinate.plus(a, b)
 
-abstract class Fighter extends Piece {
+export default abstract class Fighter extends Piece {
+  static isFighter(p: Piece | Fighter): p is Fighter {
+    return p.className === 'Fighter'
+  }
+
+  abstract behave(): void
+  abstract board: Maybe<Board>
+
   constructor(symbol: string) {
     super(symbol)
   }
@@ -30,6 +37,7 @@ export class MFighter extends Fighter {
 
   constructor(board?: Board, team?: Team, c?: Coordinate) {
     super('M')
+    this.className = Object.freeze('Fighter')
     this.board = board
     this.team = team
     this.c = c
@@ -42,42 +50,43 @@ export class MFighter extends Fighter {
   behave() {
     if (!this.board)
       throw new Error('Cannot behave if the board is not initialized')
-    this.behavior.action<WanderRandomlyArgs>({
+    const decision = this.behavior.action<WanderRandomlyArgs>({
       self: this,
       kind: this.behavior.decisionKind,
       c: undefined,
       b: this.board
     })
+    this.decision = decision
   }
 
-  moves = (b: Board): Coordinate[] => {
+  moves(b: Board, coordinate?: Coordinate): Coordinate[] {
     if (!this.c) {
       throw new Error(
         `Piece ${this} can't move if it doesn't have a coordinate.`
       )
     }
     // prettier-ignore
-    const coords = [
+    const moveableCoordinates = [
       { x:  1, y:  0 }, // Right
       { x: -1, y:  0 }, // Left
       { x:  0, y:  1 }, // Down
       { x:  0, y: -1 } // Up
     ]
-      .map(c => sum(this.c!, c))
+      .map(c => sum(coordinate || this.c!, c))
       .filter(c => !b.at(c) && b.inbounds(c))
-    return coords
+    return moveableCoordinates
   }
 }
 
 abstract class Behavior {
   abstract decisionKind: DecisionKind
-  abstract condition: <C extends DecisionArgs>(context: C) => boolean
-  abstract consequence: <C extends DecisionArgs>(context: C) => Decision
-
-  action = <C extends DecisionArgs>(context: C) =>
-    this.condition(context)
+  abstract condition<C extends DecisionArgs>(context: C): boolean
+  abstract consequence<C extends DecisionArgs>(context: C): Decision
+  action<C extends DecisionArgs>(context: C) {
+    return this.condition(context)
       ? this.consequence(context)
       : new Decision(Object.assign(context, DecisionKind.Nothing))
+  }
 }
 
 export interface WanderRandomlyArgs extends DecisionArgs {
@@ -86,15 +95,19 @@ export interface WanderRandomlyArgs extends DecisionArgs {
 
 class WanderRandomly extends Behavior {
   decisionKind = DecisionKind.Movement
-  condition = () => true
+  condition() {
+    return true
+  }
   // prettier-ignore
-  consequence = <C>(ctx: C & WanderRandomlyArgs) => ctx.self.decideMove(
-    new Decision(Object.assign(ctx, {
-      b:    Board,
-      kind: this.decisionKind,
-      c:    sample(ctx.self.emptyMoves(ctx.b))
-    }))
-  )
+  consequence<C extends DecisionArgs>(ctx: C & WanderRandomlyArgs) {
+    return ctx.self.assignMove(
+      new Decision(Object.assign(ctx, {
+        b:    Board,
+        kind: ctx.self.canMove ? this.decisionKind : DecisionKind.Nothing,
+        c:    sample(ctx.self.emptyMoves(ctx.b, ctx.self.c))
+      }))
+    )
+  }
 }
 
 // class FindEnemy extends Behavior {

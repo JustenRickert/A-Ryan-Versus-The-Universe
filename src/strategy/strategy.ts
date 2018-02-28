@@ -11,7 +11,7 @@ export default class Strategy {
     this.game = game
   }
 
-  randomMove = (p: Piece) => sample(p.emptyMoves(this.game.board.value!))
+  randomMove = (p: Piece) => sample(p.emptyMoves(this.game.cBoard.value!))
 
   // randomPossiblePlacements = (team: Team) => {
   //   const startingPositions =

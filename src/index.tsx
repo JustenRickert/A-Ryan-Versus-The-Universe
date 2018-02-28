@@ -15,6 +15,10 @@ const enemy = new Player(Team.Black, cloneDeep(STARTING_PIECES))
 const game = new Game()
 game.initializeBoard(player, enemy)
 
+setInterval(() => {
+  game.forward()
+}, 100)
+
 // setInterval(() => {
 //   game.player.pieces.forEach(p => {
 //     let move = game.strategy.value.randomMove(p)

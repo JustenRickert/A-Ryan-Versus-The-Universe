@@ -2,32 +2,37 @@ import { action, computed, observable } from 'mobx'
 
 import Board from './board'
 import Player from './player'
+import Fighter from './fighter'
 
 import Strategy from '../strategy/strategy'
-import { Check } from '../util/type'
+import { Checked } from '../util/type'
 
 export default class Game {
   boardSize = { x: 11, y: 11 }
-  @observable board: Check<Board>
-  strategy: Check<Strategy>
+  @observable cBoard: Checked<Board>
+  strategy: Checked<Strategy>
 
   @observable time: number
   @observable initialized: boolean
 
+  get board() {
+    return this.cBoard.value
+  }
+
   @computed
   get player() {
-    if (!this.board.initialized) {
+    if (!this.cBoard.initialized) {
       throw new Error('Need to initialize the board with a player.')
     }
-    return this.board.value.player
+    return this.cBoard.value.player
   }
 
   @computed
   get enemy() {
-    if (!this.board.initialized) {
+    if (!this.cBoard.initialized) {
       throw new Error('Need to initialize the board with a player.')
     }
-    return this.board.value.enemy
+    return this.cBoard.value.enemy
   }
 
   constructor() {
@@ -37,27 +42,38 @@ export default class Game {
 
   @action
   initializeBoard = (player: Player, enemy: Player) => {
-    this.board = Object.assign(<Check<Board>>{
+    this.cBoard = <Checked<Board>>{
       value: new Board(player, enemy),
       initialized: true
+    }
+    ;[this.player, this.enemy].forEach(pl => {
+      pl.pieces
+        .map(p => (p.team = pl.team) && p)
+        .filter(Fighter.isFighter)
+        .forEach(f => (f.board = this.cBoard.value))
     })
 
-    this.strategy = Object.assign(<Check<Strategy>>{
+    console.log(this.player.pieces.filter(Fighter.isFighter))
+
+    this.strategy = <Checked<Strategy>>{
       value: new Strategy(this),
       initialized: true
-    })
+    }
 
     this.initialized = true
   }
 
   forward = () => {
     this.time++
-    ;[this.player, this.enemy].forEach(p => p.forward())
+    this.cBoard.value.forward()
+    const player = this.time % 2 ? this.player : this.enemy
+    player.pieces.filter(Fighter.isFighter).forEach(f => f.behave())
+    player.act()
   }
 
   @action
   resetBoard = () => {
-    this.board.initialized = false
+    this.cBoard.initialized = false
     this.strategy.initialized = false
     this.initialized = false
   }

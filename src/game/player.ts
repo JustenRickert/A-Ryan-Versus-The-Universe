@@ -2,7 +2,7 @@ import { action, observable } from 'mobx'
 
 import Board from './board'
 import Coordinate from './coordinate'
-import Piece from './piece'
+import Piece, { DecisionKind, PieceUpdateKind } from './piece'
 
 const toNumber = Coordinate.toNumber
 
@@ -31,6 +31,17 @@ export default class Player {
     this.team = team
     this.pieces = pieces
   }
+
+  @action
+  act = () =>
+    this.pieces.forEach(p => {
+      switch (p.decision.kind) {
+        case DecisionKind.Movement:
+          p.update(PieceUpdateKind.C, p.decision.c!)
+          p.reset()
+          break
+      }
+    })
 
   @action forward = () => this.pieces.forEach(p => p.forward())
 

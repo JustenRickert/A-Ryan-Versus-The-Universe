@@ -49,7 +49,7 @@ const PieceView: React.SFC<PieceProps> = props => {
 }
 
 const BoardView: React.SFC<{ board: Board }> = props => {
-  const places: Maybe<Piece>[] = new Array(
+  const places = new Array<Maybe<Piece>>(
     props.board.size.x * props.board.size.y
   ).fill(undefined)
 
@@ -95,14 +95,19 @@ export default class MatchView extends React.Component<MatchProps, {}> {
   }
 
   private renderSorryNoGame() {
-    return <div>{`Sorry but the game isn't initialized`}</div>
+    return (
+      <div>
+        {`Sorry but the game isn't initialized. It's because something went wrong.`}
+      </div>
+    )
   }
 
   private renderBoardLines() {
     return (
       <Main>
+        <div key={this.props.game.time} />
         <Logger game={this.props.game} />
-        <BoardView board={this.props.game.board.value} />
+        <BoardView board={this.props.game.cBoard.value} />
       </Main>
     )
   }

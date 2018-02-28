@@ -38,10 +38,10 @@ export default class Board {
    */
   @observable placeMap: Map<number, Maybe<Piece>>
 
-  watchPlaceMap = (pieces: Piece[]) =>
-    observe(pieces, change => {
-      console.log('change', change)
-    })
+  // watchPlaceMap = (pieces: Piece[]) =>
+  //   observe(pieces, change => {
+  //     console.log('change', change)
+  //   })
 
   @computed
   get pieces() {
@@ -62,20 +62,23 @@ export default class Board {
     this.randomlyPlacePieces('enemy')
 
     this.placeMap = new Map<number, Piece>()
-    for (const p of this.pieces.filter(p => !!p.c))
+    for (const p of this.pieces) {
       this.placeMap.set(toNumber(p.c!), p)
+    }
     this.watchPieces()
   }
 
-  private watchPieces = () =>
-    [this.player, this.enemy].forEach(player =>
-      player.pieces.forEach(piece =>
+  private watchPieces = () => {
+    ;[this.player, this.enemy].forEach(player =>
+      player.pieces.forEach(piece => {
         observe(piece, change => {
-          this.placeMap.delete(toNumber(change.oldValue as Coordinate))
+          if (change.oldValue)
+            this.placeMap.delete(toNumber(change.oldValue as Coordinate))
           this.placeMap.set(toNumber(change.newValue as Coordinate), piece)
         })
-      )
+      })
     )
+  }
 
   at = (c: Coordinate): Maybe<Piece> => this.placeMap.get(toNumber(c))
 

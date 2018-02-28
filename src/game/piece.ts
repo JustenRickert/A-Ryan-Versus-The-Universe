@@ -33,9 +33,10 @@ export class Decision {
 
   constructor(args: DecisionArgs) {
     const { self, kind, c, op } = args
-    if (DecisionKind.Attack === kind) this.checkAttackDecisionKind(self, op)
-    if (DecisionKind.Movement === kind) this.checkMovementDecisionKind(c)
+    if (kind === DecisionKind.Attack) this.checkAttackDecisionKind(self, op)
+    if (kind === DecisionKind.Movement) this.checkMovementDecisionKind(c)
 
+    this.self = self
     this.kind = kind
     this.c = c
     this.op = op
@@ -58,29 +59,38 @@ Attack Decision constructor must have an argument for an opposing piece
   }
 }
 
+export enum PieceUpdateKind {
+  C = 'c',
+  CD = 'cd',
+  Decision = 'decision'
+}
+
 export default abstract class Piece {
+  static isPiece(piece: Piece): piece is Piece {
+    return piece.className === 'Piece'
+  }
+
   abstract team?: Team
   abstract hitpoints: number
   readonly symbol: Symbol
   readonly timeout: Timeout
 
+  className: string
   @observable c: Maybe<Coordinate>
+  @observable decision: Decision
   cd: Cooldown = 0
-  decision: Decision
 
-  // prettier-ignore
   @action
-  update = (
-    key:   'c'        | 'cd'     | 'decision',
-    value: Coordinate | Cooldown | Decision
-  ) => (this[key] = value)
-
-  forward = () => {
-    this.cd <= 0 ? (this.cd = 0) : (this.cd -= 1)
+  update(key: PieceUpdateKind, value: Coordinate | Cooldown | Decision) {
+    this[key] = value
   }
 
-  reset = () => {
-    this.cd = this.timeout
+  forward() {
+    if (this.cd > 0) this.update(PieceUpdateKind.CD, this.cd - 1)
+  }
+
+  reset() {
+    this.update(PieceUpdateKind.CD, this.timeout)
   }
 
   get canMove() {
@@ -97,19 +107,24 @@ export default abstract class Piece {
   }
 
   constructor(symbol: string, c?: Coordinate) {
+    this.className = Object.freeze('Piece')
     this.symbol = symbol
     this.c = c || undefined
   }
 
   /**
-     Deciding a move means to intend to move to a given location. The actual
-     movement won't be done until the end of the frame. This is useful when
-     there are impossible movements like two allied pieces moving to the same
-     location, then not making the move already means there's time for
-     additional logic to happen before the end of the frame.
+   * Assigning a move means to intend to move to a given location. The actual
+   * movement won't be done until the end of the frame. This is useful when
+   * there are impossible movements like two allied pieces moving to the same
+   * location, then not making the move already means there's time for
+   * additional logic to happen before the end of the frame.
    */
-  decideMove = (args: DecisionArgs) => (this.decision = new Decision(args))
+  assignMove = (args: DecisionArgs) => (this.decision = new Decision(args))
 
-  abstract moves: (b: Board) => Coordinate[]
-  emptyMoves = (b: Board) => this.moves(b).filter(c => !b.at(c))
+  /**
+   * Optional Coordinate is to find moves, if piece were at that coordinate
+   */
+  abstract moves(b: Board, c?: Coordinate): Coordinate[]
+  emptyMoves = (b: Board, coordinate?: Coordinate) =>
+    this.moves(b, coordinate).filter(c => !b.at(c))
 }
