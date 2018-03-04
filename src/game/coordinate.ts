@@ -40,7 +40,7 @@ export default class Coordinate {
         case 1:
           return Math.abs(c2.y - c1.y) + Math.abs(c2.x - c1.x)
         case 2:
-          return Math.sqrt(c2.y - c1.y) + Math.sqrt(c2.x - c1.x)
+          return Math.sqrt((c2.y - c1.y) ** 2 + (c2.x - c1.x) ** 2)
       }
     }
   }
